@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.icon-sm {
+  height:30px;
+  width:auto;
+}
+.btn {
+  @apply font-bold w-auto inline-flex items-center py-1 px-2 rounded-md;
+}
+.btn-blue {
+  @apply btn;
+  @apply bg-blue-500 hover:bg-blue-700 text-white;
+}
+.btn-outline {
+  @apply btn;
+  @apply border-blue-300 hover:border-blue-700 border-2 
+}

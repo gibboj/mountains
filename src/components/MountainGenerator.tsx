@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import chroma from "chroma-js";
 import { MorphingAnimation } from './MorphingAnimation'
 import generateSnow from './SnowGenerator'
+import { SNOW_COLOR_RANGE_BOTTOM, SNOW_COLOR_RANGE_TOP } from "../constants/colors"
+import { SvgPath } from '../utilities/SvgPath';
 
 type MountainRangeOptions = {
   canvasDimensions: { x: number, y: number },
@@ -16,13 +18,12 @@ type MountainOptions = {
   peakRange: Range,
   xStep: number
 }
+const NUMBER_OF_MOUNTAINS = 6;
 
-const numMts = [0, 1, 2, 3, 4, 5, 6];
+const numMts = [...Array(NUMBER_OF_MOUNTAINS)];
 const MountainRange: React.FC<MountainRangeOptions> = function ({ canvasDimensions, numberOfMountains, peakRange, base }) {
   const xStep = canvasDimensions.x / (numberOfMountains)
-
   return (<g>
-
     {numMts.map((x, i) => <Mountain key={i} i={i} base={base} peakRange={peakRange} xStep={xStep} />).sort((a, b) => 0.5 - Math.random())}
   </g>
   )
@@ -45,7 +46,7 @@ const Mountain: React.FC<MountainOptions> = function ({ i, base, peakRange, xSte
   const baseRight = peakX + baseX;
 
   useEffect(() => {
-    const path = `M ${peakX},${peakY} L${baseLeft},${baseY} L${baseRight},${baseY} Z`
+    const path = `${SvgPath.move(peakX, peakY)} ${SvgPath.lineTo(baseLeft, baseY)}  ${SvgPath.lineTo(baseRight, baseY)} Z`
 
     // Make constants & loop
     const snowPath_100 = generateSnow({ x: peakX, y: peakY }, { x: baseLeft, y: baseY }, 0.95)
@@ -54,7 +55,7 @@ const Mountain: React.FC<MountainOptions> = function ({ i, base, peakRange, xSte
     const snowPath_40 = generateSnow({ x: peakX, y: peakY }, { x: baseLeft, y: baseY }, 0.4)
     const snowPath_20 = generateSnow({ x: peakX, y: peakY }, { x: baseLeft, y: baseY }, 0)
 
-    const anim = new MorphingAnimation([snowPath_100, snowPath_85, snowPath_70, snowPath_40, snowPath_20], [10000, 15000, 20000, 30000])
+    const anim = new MorphingAnimation([snowPath_100, snowPath_85, snowPath_70, snowPath_40, snowPath_20], [10000, 15000, 20000, 25000])
     setAnimation(anim)
     setSnowPath(anim.getPath(1))
     setSnowPathTop(anim.getPath(1000))
@@ -85,13 +86,13 @@ const Mountain: React.FC<MountainOptions> = function ({ i, base, peakRange, xSte
     time => {
       var t = time % 30000;
       animation && setSnowPath(animation.getPath(t))
-      animation && setSnowPathTop(animation.getPath(t + 9000))
+      animation && setSnowPathTop(animation.getPath(t + 7000))
     })
 
   return (
     <g key={`mountain_${i}`} stroke="null" >
       <path stroke="none" id={`mountain_${i}`} d={mountainPath} fill={mountainColor} />
-      <path stroke="none" id={`mountain_${i}_snow`} d={snowPathTop} fill={snowColorTop} />
+      <path stroke="none" id={`mountain_${i}_snow`} d={snowPathTop} fill={chroma(snowColor).darken(0.2).hex()} />
       <path stroke="none" id={`mountain_${i}_snow_top`} d={snowPath} fill={snowColor} />
     </g>
   );
@@ -103,7 +104,7 @@ const getRandomColor = () => {
 }
 
 const getRandomWhiteColor = () => {
-  const scale = chroma.scale(['FDFDF4', 'E0EBE5']);
+  const scale = chroma.scale([SNOW_COLOR_RANGE_BOTTOM, SNOW_COLOR_RANGE_TOP]);
   return scale(Math.random()).hex();
 }
 

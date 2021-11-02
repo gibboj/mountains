@@ -1,0 +1,2 @@
+export const SNOW_COLOR_RANGE_BOTTOM = 'FDFDF4';
+export const SNOW_COLOR_RANGE_TOP = 'E0EBE5';

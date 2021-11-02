@@ -1,2 +1,5 @@
 export const SNOW_COLOR_RANGE_BOTTOM = 'FDFDF4';
 export const SNOW_COLOR_RANGE_TOP = 'E0EBE5';
+
+export const WINTER_MOUNTAIN_COLORS = ['274472', 'C3E0E5'];
+export const SPRING_MOUNTAIN_COLORS = ['384646', 'BFBB5F', '4c4c42'];

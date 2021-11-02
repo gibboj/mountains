@@ -5,30 +5,30 @@ import generateSnow from './SnowGenerator'
 
 type MountainRangeOptions = {
   canvasDimensions: { x: number, y: number },
-  numberOfMountains: number
+  numberOfMountains: number,
+  base: number,
+  peakRange: Range,
 }
 type Range = { bottom: number, top: number }
 type MountainOptions = {
   i: number,
-  baseRange: Range,
+  base: number,
   peakRange: Range,
   xStep: number
 }
 
 const numMts = [0, 1, 2, 3, 4, 5, 6];
-const MountainRange: React.FC<MountainRangeOptions> = function ({ canvasDimensions, numberOfMountains }) {
-  const baseRange = { bottom: 2 * (canvasDimensions.y / 3), top: 5 * (canvasDimensions.y / 6) };
-  const peakRange = { bottom: canvasDimensions.y / 6, top: canvasDimensions.y / 2 };
+const MountainRange: React.FC<MountainRangeOptions> = function ({ canvasDimensions, numberOfMountains, peakRange, base }) {
   const xStep = canvasDimensions.x / (numberOfMountains)
 
-  return (<svg width={canvasDimensions.x} height={canvasDimensions.y} xmlns="http://www.w3.org/2000/svg" stroke="null" >
+  return (<g>
 
-    {numMts.map((x, i) => <Mountain key={i} i={i} baseRange={baseRange} peakRange={peakRange} xStep={xStep} />).sort((a, b) => 0.5 - Math.random())}
-  </svg>
+    {numMts.map((x, i) => <Mountain key={i} i={i} base={base} peakRange={peakRange} xStep={xStep} />).sort((a, b) => 0.5 - Math.random())}
+  </g>
   )
 }
 
-const Mountain: React.FC<MountainOptions> = function ({ i, baseRange, peakRange, xStep }) {
+const Mountain: React.FC<MountainOptions> = function ({ i, base, peakRange, xStep }) {
   const [mountainPath, setMountainPath] = React.useState('')
   const [snowPath, setSnowPath] = React.useState('')
   const [snowPathTop, setSnowPathTop] = React.useState('')
@@ -38,7 +38,7 @@ const Mountain: React.FC<MountainOptions> = function ({ i, baseRange, peakRange,
   const [animation, setAnimation] = React.useState<MorphingAnimation | null>(null)
 
   const baseX = ((0.40 + Math.random()) * xStep)
-  const baseY = baseRange.top;
+  const baseY = base;
   const peakY = (Math.random() * (peakRange.top - peakRange.bottom)) + peakRange.bottom
   const peakX = (i + 0.5) * xStep
   const baseLeft = peakX - baseX;
@@ -47,6 +47,7 @@ const Mountain: React.FC<MountainOptions> = function ({ i, baseRange, peakRange,
   useEffect(() => {
     const path = `M ${peakX},${peakY} L${baseLeft},${baseY} L${baseRight},${baseY} Z`
 
+    // Make constants & loop
     const snowPath_100 = generateSnow({ x: peakX, y: peakY }, { x: baseLeft, y: baseY }, 0.95)
     const snowPath_85 = generateSnow({ x: peakX, y: peakY }, { x: baseLeft, y: baseY }, 0.85)
     const snowPath_70 = generateSnow({ x: peakX, y: peakY }, { x: baseLeft, y: baseY }, 0.7)
@@ -68,7 +69,6 @@ const Mountain: React.FC<MountainOptions> = function ({ i, baseRange, peakRange,
 
     const animate = (time: number) => {
       if (previousTimeRef.current != undefined) {
-
         callback(time)
       }
       previousTimeRef.current = time;
@@ -80,10 +80,10 @@ const Mountain: React.FC<MountainOptions> = function ({ i, baseRange, peakRange,
       return () => cancelAnimationFrame(requestRef.current);
     }, [animation]); // Make sure the effect runs only once
   }
+
   useAnimationFrame(
     time => {
       var t = time % 30000;
-
       animation && setSnowPath(animation.getPath(t))
       animation && setSnowPathTop(animation.getPath(t + 9000))
     })
@@ -91,8 +91,8 @@ const Mountain: React.FC<MountainOptions> = function ({ i, baseRange, peakRange,
   return (
     <g key={`mountain_${i}`} stroke="null" >
       <path stroke="none" id={`mountain_${i}`} d={mountainPath} fill={mountainColor} />
-      <path stroke="none" id={`mountain_${i}_snow_2`} d={snowPathTop} fill={snowColorTop} />
-      <path stroke="none" id={`mountain_${i}_snow`} d={snowPath} fill={snowColor} />
+      <path stroke="none" id={`mountain_${i}_snow`} d={snowPathTop} fill={snowColorTop} />
+      <path stroke="none" id={`mountain_${i}_snow_top`} d={snowPath} fill={snowColor} />
     </g>
   );
 }

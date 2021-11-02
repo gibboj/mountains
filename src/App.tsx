@@ -9,11 +9,12 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
+import Scene from './components/scene';
 
 function App() {
   return (
     <Router>
-      <div className="">
+      <div className="bg-blue-100 h-screen grid grid-rows-layout">
         <Header />
         <Switch>
           <Route path="/climbing">
@@ -26,6 +27,7 @@ function App() {
             <Home />
           </Route>
         </Switch>
+        <Scene />
       </div>
     </Router >
   );

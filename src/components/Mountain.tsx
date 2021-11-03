@@ -14,13 +14,13 @@ type MountainOptions = {
   base: number,
   peakRange: Tuple,
   xStep: number,
-  mountainColor: string
+  // mountainColor: string
   snowAnimation?: ANIMATION_STATE,
   seasonDuration: number
 }
 const ANIMATION_OFFSET = 1000;
 
-const Mountain: React.FC<MountainOptions> = function ({ i, base, peakRange, xStep, mountainColor, snowAnimation, seasonDuration }) {
+const Mountain: React.FC<MountainOptions> = function ({ i, base, peakRange, xStep, snowAnimation, seasonDuration }) {
   const baseX = ((0.40 + Math.random()) * xStep)
   const baseY = base;
   const peakY = (Math.random() * (peakRange[1] - peakRange[0])) + peakRange[0]
@@ -54,7 +54,7 @@ const Mountain: React.FC<MountainOptions> = function ({ i, base, peakRange, xSte
         }
         return acc;
       }, [] as Array<number>)
-      setKeyFrames(newKeyFrames)
+
       switch (snowAnimation) {
         case ANIMATION_STATE.BACKWARD: {
           anim = new MorphingAnimation(snowPaths, newKeyFrames)
@@ -69,6 +69,7 @@ const Mountain: React.FC<MountainOptions> = function ({ i, base, peakRange, xSte
           break;
         }
       }
+
       if (anim) {
         setAnimation(anim)
       }
@@ -90,14 +91,13 @@ const Mountain: React.FC<MountainOptions> = function ({ i, base, peakRange, xSte
   useAnimationFrame(
     time => {
       var t = SeasonHelper.getTimeInSeason(time);
-
       animation && setSnowPath(animation.getPath(t))
       // animation && setSnowPathTop(animation.getPath(t + seasonDuration * 0.2))
-    }, [animation])
+    })
 
   return (
     <g key={`mountain_${i}`} stroke="null" >
-      <path stroke="none" id={`mountain_${i}`} d={mountainPath} fill={mountainColor} />
+      <path stroke="none" id={`mountain_${i}`} d={mountainPath} fill={'green'} />
       {snowAnimation !== ANIMATION_STATE.NONE && (
         <g>
           {/* <path stroke="none" id={`mountain_${i}_snow`} d={snowPathTop} fill={chroma(snowColor).darken(0.2).hex()} /> */}

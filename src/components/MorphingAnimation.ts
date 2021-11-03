@@ -48,8 +48,6 @@ export class MorphingAnimation {
       const percentage = Math.min(1, (time - startTime) / (this.keyFrames[index] - startTime))
 
       return interpolator(percentage)
-    } else {
-
     }
     return this.paths[this.paths.length - 1]
   }

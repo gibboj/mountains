@@ -1,7 +1,7 @@
 
 import { useEffect, useRef } from "react"
 import { SeasonHelper } from "./constants/seasons";
-export const useAnimationFrame = (callback: FrameRequestCallback, deps: Array<any> = []) => {
+export const useAnimationFrame = (callback: FrameRequestCallback, deps?: Array<any>) => {
   // Use useRef for mutable variables that we want to persist
   // without triggering a re-render on their change
   const requestRef = useRef<number>(-1);

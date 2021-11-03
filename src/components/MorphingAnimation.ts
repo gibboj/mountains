@@ -7,6 +7,7 @@ type MorphOptions = {
   maxSegmentLength?: number;
 }
 const defaultOptions = { maxSegmentLength: 2 }
+
 export class MorphingAnimation {
   interpolators: Array<Interpolator>;
   keyFrames: Array<number>;
@@ -37,6 +38,7 @@ export class MorphingAnimation {
     this.interpolators[index] = interpolator;
     return interpolator;
   }
+
   getPath(time: number) {
     const index = this.keyFrames.findIndex((val: number) => {
       return time < val

@@ -1,10 +1,12 @@
 import { getColorInRange } from "../utilities/Color";
-import { SPRING_MOUNTAIN_COLORS, WINTER_MOUNTAIN_COLORS } from "./colors";
+import { SPRING_MOUNTAIN_COLORS, SUMMER_MOUNTAIN_COLORS, WINTER_MOUNTAIN_COLORS } from "./colors";
 
-export const WINTER_LENGTH = 2000;
-export const SPRING_LENGTH = 5000;
+export const WINTER_LENGTH = 10000;
+export const SPRING_LENGTH = 10000;
+export const SUMMER_LENGTH = 10000;
 
-export type Seasons = 'winter' | 'spring'
+
+export type Seasons = 'winter' | 'spring' | 'summer'
 
 export enum ANIMATION_STATE {
   FORWARD,
@@ -48,6 +50,18 @@ export const seasons: Array<Season> = [{
     mountains: {
       snowState: ANIMATION_STATE.BACKWARD,
       colorRange: SPRING_MOUNTAIN_COLORS
+    },
+    lake: {
+      colorRange: ['green', 'aqua']
+    }
+  },
+}, {
+  name: 'summer',
+  duration: SUMMER_LENGTH,
+  features: {
+    mountains: {
+      snowState: ANIMATION_STATE.NONE,
+      colorRange: SUMMER_MOUNTAIN_COLORS
     },
     lake: {
       colorRange: ['green', 'aqua']
@@ -98,12 +112,19 @@ export class SeasonHelper {
     return currentSeason;
   }
 
-  static getMountainColors(time: number): Array<string> {
-    const season = this.getCurrentSeason(time)
-    const prevSeason = this.getPreviousSeason(time)
-    const currColor = getColorInRange(season.features.mountains.colorRange)
-    const nextColor = getColorInRange(prevSeason.features.mountains.colorRange)
-    return [nextColor, currColor]
+  static getMountainColors(): { colors: Array<string>, position: Array<number> } {
+    let colors = [];
+    let position = [0];
+    let timeProportion = 0;
+
+    for (let s = 0; s < seasons.length; s++) {
+      timeProportion += seasons[s].duration;
+      colors.push(getColorInRange({ range: seasons[s].features.mountains.colorRange }))
+      position.push(timeProportion / SeasonHelper.getTotalDuration())
+    }
+    colors.unshift(colors[colors.length - 1])
+
+    return { colors, position }
   }
 
   static getCurrentSeasonName(time: number): string {

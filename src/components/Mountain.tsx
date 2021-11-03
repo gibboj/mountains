@@ -1,5 +1,5 @@
 import chroma from "chroma-js";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { SNOW_COLOR_RANGE_BOTTOM, SNOW_COLOR_RANGE_TOP } from "../constants/colors";
 import { ANIMATION_STATE, SeasonHelper } from "../constants/seasons";
 import { useAnimationFrame } from "../useAnimationFrame";
@@ -34,6 +34,9 @@ const Mountain: React.FC<MountainOptions> = function ({ i, base, peakRange, xSte
       return generateSnow({ x: peakX, y: peakY }, { x: baseLeft, y: baseY }, val / 100)
     })
   })
+  const [colorRange, setColorRange] = useState(() => SeasonHelper.getMountainColors())
+  const [mountainColor, setMountainColor] = useState(getColorInRange({ range: colorRange.colors, domain: colorRange.position }));
+
   const [keyFrames, setKeyFrames] = React.useState<Array<number>>(() => snowPaths.reduce((acc, val, index) => {
     if (index > 0) {
       acc.push(index * ((seasonDuration) / (snowPaths.length - 1)))
@@ -42,7 +45,7 @@ const Mountain: React.FC<MountainOptions> = function ({ i, base, peakRange, xSte
   }, [] as Array<number>))
   const [snowPath, setSnowPath] = React.useState('')
   const [snowPathTop, setSnowPathTop] = React.useState('')
-  const [snowColor, setSnowColor] = React.useState(getColorInRange([SNOW_COLOR_RANGE_BOTTOM, SNOW_COLOR_RANGE_TOP]))
+  const [snowColor, setSnowColor] = React.useState(getColorInRange({ range: [SNOW_COLOR_RANGE_BOTTOM, SNOW_COLOR_RANGE_TOP] }))
   const [animation, setAnimation] = React.useState<MorphingAnimation | null>(null)
 
   const setupAnimationForSeason = () => {
@@ -54,7 +57,7 @@ const Mountain: React.FC<MountainOptions> = function ({ i, base, peakRange, xSte
         }
         return acc;
       }, [] as Array<number>)
-
+      //   setColorRange([colorRange[1], )
       switch (snowAnimation) {
         case ANIMATION_STATE.BACKWARD: {
           anim = new MorphingAnimation(snowPaths, newKeyFrames)
@@ -69,36 +72,40 @@ const Mountain: React.FC<MountainOptions> = function ({ i, base, peakRange, xSte
           break;
         }
       }
-
-      if (anim) {
-        setAnimation(anim)
-      }
+      setAnimation(anim)
     }
   }
 
   useEffect(() => {
     setMountainPath(`${SvgPath.move(peakX, peakY)} ${SvgPath.lineTo(baseLeft, baseY)}  ${SvgPath.lineTo(baseRight, baseY)} Z`)
 
-    if (snowAnimation !== ANIMATION_STATE.NONE) {
-      setupAnimationForSeason()
-    }
+    setupAnimationForSeason()
+
   }, [])
 
   useEffect(() => {
     setupAnimationForSeason()
-  }, [snowAnimation, seasonDuration])
+  }, [seasonDuration, snowAnimation])
 
   useAnimationFrame(
     time => {
       var t = SeasonHelper.getTimeInSeason(time);
-      animation && setSnowPath(animation.getPath(t))
+
+      setMountainColor(getColorInRange({
+        range: colorRange.colors,
+        domain: colorRange.position,
+        percentage: time / SeasonHelper.getTotalDuration()
+      }))
+
+      const path = animation ? animation.getPath(t) : ''
+      setSnowPath(path)
       // animation && setSnowPathTop(animation.getPath(t + seasonDuration * 0.2))
-    })
+    }, [animation, seasonDuration, snowAnimation])
 
   return (
     <g key={`mountain_${i}`} stroke="null" >
-      <path stroke="none" id={`mountain_${i}`} d={mountainPath} fill={'green'} />
-      {snowAnimation !== ANIMATION_STATE.NONE && (
+      <path stroke="none" id={`mountain_${i}`} d={mountainPath} fill={mountainColor} />
+      {(
         <g>
           {/* <path stroke="none" id={`mountain_${i}_snow`} d={snowPathTop} fill={chroma(snowColor).darken(0.2).hex()} /> */}
           <path stroke="none" id={`mountain_${i}_snow_top`} d={snowPath} fill={snowColor} />

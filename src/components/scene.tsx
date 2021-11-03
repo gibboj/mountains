@@ -35,24 +35,21 @@ const Scene = function () {
       <div>Season: {seasonName}</div>
       <svg width={canvasDimensions.x} height={canvasDimensions.y} xmlns="http://www.w3.org/2000/svg" stroke="null" >
 
-        {/* <MountainRange
+        <MountainRange
           numberOfMountains={3}
           canvasDimensions={canvasDimensions}
           base={mountainBase}
           peakRange={[peakRange[0] - 50, peakRange[1] - 50]}
           snowAnimation={ANIMATION_STATE.NONE}
-          colorRange={season.features.mountains.colorRange.map((c) => chroma(c).brighten(1).desaturate(0.3).hex())}
-          seasonDuration={season.duration}
-
-        /> */}
+          seasonDuration={seasonDuration}
+        />
 
         <MountainRange
-          numberOfMountains={1}
+          numberOfMountains={6}
           canvasDimensions={canvasDimensions}
           base={mountainBase}
           peakRange={peakRange}
           snowAnimation={snowState}
-
           seasonDuration={seasonDuration}
         />
 

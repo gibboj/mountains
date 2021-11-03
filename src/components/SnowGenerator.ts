@@ -1,9 +1,11 @@
 
+
 import { intersection, Point, Tuple } from "../utilities/Math";
 import { SvgPath } from "../utilities/SvgPath";
 const SNOW_DRIPS = 7;
 
 const generateSnow = (peakPoint: Point, basePoint: Point, position: number = 0.7) => {
+  //console.log(peakPoint)
   /** position of the snow line on a scale of  0 to 1, 1 being the peak */
   /**
    *        A
@@ -27,7 +29,7 @@ const generateSnow = (peakPoint: Point, basePoint: Point, position: number = 0.7
   const G: Tuple = [E[0] + (E[0] - F[0]), E[1]];
 
   const curves = createSnowCurve(G, F, h, position)
-  return `${SvgPath.move(A)} ${SvgPath.lineTo(G)} ${curves} ${SvgPath.lineTo(F)} Z`;
+  return `${SvgPath.move(A)} ${SvgPath.lineTo(G)} ${curves} ${SvgPath.lineTo(F)}  Z`;
 }
 
 function createSnowCurve(a: Tuple, b: Tuple, heightOfMountain: number, position: number) {

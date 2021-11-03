@@ -1,50 +1,56 @@
 
 
+import { useState } from "react";
+import chroma from "chroma-js";
 import MountainRange from "./MountainGenerator";
 import Lake from "./Lake"
-import { SPRING_MOUNTAIN_COLORS, WINTER_MOUNTAIN_COLORS } from "../constants/colors";
-import chroma from "chroma-js";
 import { ANIMATION_STATE, Season, SeasonHelper } from "../constants/seasons";
 import { useAnimationFrame } from "../useAnimationFrame";
-import { useState } from "react";
+import { Tuple } from '../utilities/Math';
 
 const Scene = function () {
-  const [season, setSeason] = useState<Season>(SeasonHelper.getCurrentSeason(0))
+  const [seasonName, setSeasonName] = useState<string>(SeasonHelper.getCurrentSeason(1).name)
+  const [snowState, setSnowState] = useState<ANIMATION_STATE>(ANIMATION_STATE.FORWARD)
+  const [colorRange, setColorRange] = useState<Array<string>>(SeasonHelper.getCurrentSeason(1).features.mountains.colorRange)
+  const [seasonDuration, setSeasonDuration] = useState<number>(SeasonHelper.getCurrentSeason(1).duration)
   const canvasDimensions = { x: window.document.documentElement.clientWidth, y: 400 }
   const mountainBase = 5 * (canvasDimensions.y / 6);
-  const peakRange = { bottom: canvasDimensions.y / 6, top: canvasDimensions.y / 2 };
+  const peakRange: Tuple = [canvasDimensions.y / 6, canvasDimensions.y / 2]
 
   useAnimationFrame((time) => {
-    const seasonName = SeasonHelper.getCurrentSeason(time).name
-    if (seasonName !== season.name) {
-      setSeason(SeasonHelper.getCurrentSeason(time))
+    const newSeason = SeasonHelper.getCurrentSeason(time)
+    if (newSeason.name !== seasonName) {
+      setSeasonName(newSeason.name)
+      setSnowState(newSeason.features.mountains.snowState)
+      setSeasonDuration(newSeason.duration)
+      setColorRange(newSeason.features.mountains.colorRange)
     }
-  })
+  }, [seasonName, seasonDuration, colorRange, snowState])
 
   return (
     <div className=" bg-blue-100">
-      <div>Season: {season.name}</div>
+      <div>Season: {seasonName}</div>
       <svg width={canvasDimensions.x} height={canvasDimensions.y} xmlns="http://www.w3.org/2000/svg" stroke="null" >
 
-        <MountainRange
+        {/* <MountainRange
           numberOfMountains={3}
           canvasDimensions={canvasDimensions}
           base={mountainBase}
-          peakRange={{ bottom: peakRange.bottom - 50, top: peakRange.top - 50 }}
+          peakRange={[peakRange[0] - 50, peakRange[1] - 50]}
           snowAnimation={ANIMATION_STATE.NONE}
           colorRange={season.features.mountains.colorRange.map((c) => chroma(c).brighten(1).desaturate(0.3).hex())}
           seasonDuration={season.duration}
 
-        />
+        /> */}
 
         <MountainRange
-          numberOfMountains={7}
+          numberOfMountains={2}
           canvasDimensions={canvasDimensions}
           base={mountainBase}
           peakRange={peakRange}
-          snowAnimation={season.features.mountains.snowState}
-          colorRange={season.features.mountains.colorRange}
-          seasonDuration={season.duration}
+          snowAnimation={snowState}
+          colorRange={colorRange}
+          seasonDuration={seasonDuration}
         />
 
         <Lake surface={mountainBase} canvasDimensions={canvasDimensions} />

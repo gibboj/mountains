@@ -1,7 +1,7 @@
 import { SPRING_MOUNTAIN_COLORS, WINTER_MOUNTAIN_COLORS } from "./colors";
 
 const WINTER_LENGTH = 5000;
-const SPRING_LENGTH = 10000;
+const SPRING_LENGTH = 8000;
 
 export type Seasons = 'winter' | 'spring'
 
@@ -82,7 +82,7 @@ export class SeasonHelper {
 
     const currentSeason = seasons.find((season, index): Season | undefined => {
       cumulativeTime += season.duration;
-      if ((time % total) < cumulativeTime || index === seasons.length - 1) {
+      if ((time % total) < cumulativeTime) {
         return season;
       }
     }, 0)

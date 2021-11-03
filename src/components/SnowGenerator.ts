@@ -21,7 +21,7 @@ const generateSnow = (peakPoint: Point, basePoint: Point, position: number = 0.7
    * C = peakPoint.x, basePoint.y
    */
   const h = (peakPoint.y - basePoint.y);
-  const A: Tuple = [peakPoint.x, peakPoint.y];
+  const A: Tuple = [peakPoint.x, peakPoint.y - 10];
   const B: Tuple = [basePoint.x, basePoint.y];
   const D: Tuple = [basePoint.x, basePoint.y + h * position]
   const E: Tuple = [peakPoint.x, basePoint.y + h * position]

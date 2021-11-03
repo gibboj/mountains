@@ -1,12 +1,12 @@
 import { getColorInRange } from "../utilities/Color";
-import { SPRING_MOUNTAIN_COLORS, SUMMER_MOUNTAIN_COLORS, WINTER_MOUNTAIN_COLORS } from "./colors";
+import { FALL_MOUNTAIN_COLORS, SPRING_MOUNTAIN_COLORS, SUMMER_MOUNTAIN_COLORS, WINTER_MOUNTAIN_COLORS } from "./colors";
 
 export const WINTER_LENGTH = 10000;
 export const SPRING_LENGTH = 10000;
 export const SUMMER_LENGTH = 10000;
 
 
-export type Seasons = 'winter' | 'spring' | 'summer'
+export type Seasons = 'winter' | 'spring' | 'summer' | 'fall'
 
 export enum ANIMATION_STATE {
   FORWARD,
@@ -62,6 +62,19 @@ export const seasons: Array<Season> = [{
     mountains: {
       snowState: ANIMATION_STATE.NONE,
       colorRange: SUMMER_MOUNTAIN_COLORS
+    },
+    lake: {
+      colorRange: ['green', 'aqua']
+    }
+  },
+},
+{
+  name: 'fall',
+  duration: SUMMER_LENGTH,
+  features: {
+    mountains: {
+      snowState: ANIMATION_STATE.NONE,
+      colorRange: FALL_MOUNTAIN_COLORS
     },
     lake: {
       colorRange: ['green', 'aqua']

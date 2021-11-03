@@ -11,7 +11,6 @@ import { Tuple } from '../utilities/Math';
 const Scene = function () {
   const currentSeason = SeasonHelper.getCurrentSeason(1);
 
-
   const [seasonName, setSeasonName] = useState<string>(SeasonHelper.getCurrentSeason(1).name)
   const [snowState, setSnowState] = useState<ANIMATION_STATE>(ANIMATION_STATE.FORWARD)
 
@@ -32,7 +31,7 @@ const Scene = function () {
 
   return (
     <div className=" bg-blue-100">
-      <div>Season: {seasonName}</div>
+
       <svg width={canvasDimensions.x} height={canvasDimensions.y} xmlns="http://www.w3.org/2000/svg" stroke="null" >
 
         <MountainRange
@@ -53,7 +52,7 @@ const Scene = function () {
           seasonDuration={seasonDuration}
         />
 
-        <Lake surface={mountainBase} canvasDimensions={canvasDimensions} />
+        <Lake surface={mountainBase} canvasDimensions={canvasDimensions} seasonDuration={seasonDuration} />
       </svg>
     </div >
   );

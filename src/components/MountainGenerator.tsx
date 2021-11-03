@@ -1,6 +1,5 @@
 import React from 'react'
 import Mountain from "./Mountain";
-import { getColorInRange } from '../utilities/Color';
 
 import { ANIMATION_STATE } from '../constants/seasons';
 import { Tuple } from '../utilities/Math';
@@ -10,13 +9,11 @@ type MountainRangeOptions = {
   numberOfMountains: number,
   base: number,
   peakRange: Tuple,
-  colorRange: Array<string>
   snowAnimation?: ANIMATION_STATE,
   seasonDuration: number
 }
 
-
-const MountainRange: React.FC<MountainRangeOptions> = function ({ canvasDimensions, numberOfMountains, peakRange, base, snowAnimation, colorRange, seasonDuration }) {
+const MountainRange: React.FC<MountainRangeOptions> = function ({ canvasDimensions, numberOfMountains, peakRange, base, snowAnimation, seasonDuration }) {
   const xStep = canvasDimensions.x / (numberOfMountains)
   const numMts = [...Array(numberOfMountains)]
 
@@ -28,7 +25,6 @@ const MountainRange: React.FC<MountainRangeOptions> = function ({ canvasDimensio
           i={i}
           base={base}
           peakRange={peakRange}
-          mountainColor={getColorInRange(colorRange)}
           xStep={xStep}
           snowAnimation={snowAnimation}
           seasonDuration={seasonDuration}

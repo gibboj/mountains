@@ -9,9 +9,13 @@ import { useAnimationFrame } from "../useAnimationFrame";
 import { Tuple } from '../utilities/Math';
 
 const Scene = function () {
+  const currentSeason = SeasonHelper.getCurrentSeason(1);
+
+
   const [seasonName, setSeasonName] = useState<string>(SeasonHelper.getCurrentSeason(1).name)
   const [snowState, setSnowState] = useState<ANIMATION_STATE>(ANIMATION_STATE.FORWARD)
-  const [colorRange, setColorRange] = useState<Array<string>>(SeasonHelper.getCurrentSeason(1).features.mountains.colorRange)
+
+
   const [seasonDuration, setSeasonDuration] = useState<number>(SeasonHelper.getCurrentSeason(1).duration)
   const canvasDimensions = { x: window.document.documentElement.clientWidth, y: 400 }
   const mountainBase = 5 * (canvasDimensions.y / 6);
@@ -23,9 +27,8 @@ const Scene = function () {
       setSeasonName(newSeason.name)
       setSnowState(newSeason.features.mountains.snowState)
       setSeasonDuration(newSeason.duration)
-      setColorRange(newSeason.features.mountains.colorRange)
     }
-  }, [seasonName, seasonDuration, colorRange, snowState])
+  }, [seasonName, seasonDuration, snowState])
 
   return (
     <div className=" bg-blue-100">
@@ -44,12 +47,12 @@ const Scene = function () {
         /> */}
 
         <MountainRange
-          numberOfMountains={2}
+          numberOfMountains={1}
           canvasDimensions={canvasDimensions}
           base={mountainBase}
           peakRange={peakRange}
           snowAnimation={snowState}
-          colorRange={colorRange}
+
           seasonDuration={seasonDuration}
         />
 

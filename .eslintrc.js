@@ -19,6 +19,6 @@ module.exports = {
   },
   plugins: ["react", "@typescript-eslint"],
   rules: {
-    "max-len": [2, { code: 80, ignoreComments: true }],
+    "max-len": [2, { code: 80, ignoreComments: true, ignoreStrings: true }],
   },
 };

@@ -9,7 +9,7 @@ import Scene from "./components/scene";
 function App() {
   return (
     <Router>
-      <div className="bg-blue-100 h-screen grid grid-rows-layout">
+      <div className="bg-blue-100 min-h-screen grid grid-rows-layout">
         <Header />
         <Switch>
           <Route path="/climbing">

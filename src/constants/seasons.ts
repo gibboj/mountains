@@ -6,10 +6,10 @@ import {
   WINTER_MOUNTAIN_COLORS,
 } from "./colors";
 
-export const WINTER_LENGTH = 5000;
+export const WINTER_LENGTH = 12000;
 export const SPRING_LENGTH = 12000;
-export const SUMMER_LENGTH = 3000;
-export const FALL_LENGTH = 20000;
+export const SUMMER_LENGTH = 12000;
+export const FALL_LENGTH = 15000;
 
 export type Seasons = "winter" | "spring" | "summer" | "fall";
 

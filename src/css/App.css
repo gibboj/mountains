@@ -2,9 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  h1 {
+    @apply text-lg;
+    @apply font-bold;
+  }
+  h2 {
+    @apply text-base;
+    @apply font-semibold;
+  }
+  h3 {
+    @apply text-sm;
+  }
+  h4 {
+    @apply text-xs;
+  }
+}
 .icon-sm {
-  height:30px;
-  width:auto;
+  height: 30px;
+  width: auto;
 }
 .btn {
   @apply font-bold w-auto inline-flex items-center py-1 px-2 rounded-md;
@@ -15,5 +31,5 @@
 }
 .btn-outline {
   @apply btn;
-  @apply border-blue-300 hover:border-blue-700 border-2 
+  @apply border-blue-300 hover:border-blue-700 border-2;
 }

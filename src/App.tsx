@@ -1,15 +1,10 @@
-
-import './css/App.css';
+import "./css/App.css";
 
 import Resume from "./components/resume";
-import Header from "./components/header"
-import Home from "./components/home"
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-} from "react-router-dom";
-import Scene from './components/scene';
+import Header from "./components/header";
+import Home from "./components/home";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Scene from "./components/scene";
 
 function App() {
   return (
@@ -29,13 +24,12 @@ function App() {
         </Switch>
         <Scene />
       </div>
-    </Router >
+    </Router>
   );
 }
 
 function Climbing() {
   return <h2>Climbing</h2>;
 }
-
 
 export default App;

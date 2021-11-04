@@ -1,39 +1,47 @@
-
-
 import { useState } from "react";
-import chroma from "chroma-js";
 import MountainRange from "./MountainGenerator";
-import Lake from "./Lake"
-import { ANIMATION_STATE, Season, SeasonHelper } from "../constants/seasons";
+import Lake from "./Lake";
+import { ANIMATION_STATE, SeasonHelper } from "../constants/seasons";
 import { useAnimationFrame } from "../useAnimationFrame";
-import { Tuple } from '../utilities/Math';
+import { Tuple } from "../utilities/Math";
 
 const Scene = function () {
-  const currentSeason = SeasonHelper.getCurrentSeason(1);
-
-  const [seasonName, setSeasonName] = useState<string>(SeasonHelper.getCurrentSeason(1).name)
-  const [snowState, setSnowState] = useState<ANIMATION_STATE>(ANIMATION_STATE.FORWARD)
-
-
-  const [seasonDuration, setSeasonDuration] = useState<number>(SeasonHelper.getCurrentSeason(1).duration)
-  const canvasDimensions = { x: window.document.documentElement.clientWidth, y: 400 }
+  const [seasonName, setSeasonName] = useState<string>(
+    SeasonHelper.getCurrentSeason(1).name
+  );
+  const [snowState, setSnowState] = useState<ANIMATION_STATE>(
+    ANIMATION_STATE.FORWARD
+  );
+  const [seasonDuration, setSeasonDuration] = useState<number>(
+    SeasonHelper.getCurrentSeason(1).duration
+  );
+  const canvasDimensions = {
+    x: window.document.documentElement.clientWidth,
+    y: 400,
+  };
   const mountainBase = 5 * (canvasDimensions.y / 6);
-  const peakRange: Tuple = [canvasDimensions.y / 6, canvasDimensions.y / 2]
+  const peakRange: Tuple = [canvasDimensions.y / 6, canvasDimensions.y / 2];
 
-  useAnimationFrame((time) => {
-    const newSeason = SeasonHelper.getCurrentSeason(time)
-    if (newSeason.name !== seasonName) {
-      setSeasonName(newSeason.name)
-      setSnowState(newSeason.features.mountains.snowState)
-      setSeasonDuration(newSeason.duration)
-    }
-  }, [seasonName, seasonDuration, snowState])
+  useAnimationFrame(
+    (time) => {
+      const newSeason = SeasonHelper.getCurrentSeason(time);
+      if (newSeason.name !== seasonName) {
+        setSeasonName(newSeason.name);
+        setSnowState(newSeason.features.mountains.snowState);
+        setSeasonDuration(newSeason.duration);
+      }
+    },
+    [seasonName, seasonDuration, snowState]
+  );
 
   return (
     <div className=" bg-blue-100">
-
-      <svg width={canvasDimensions.x} height={canvasDimensions.y} xmlns="http://www.w3.org/2000/svg" stroke="null" >
-
+      <svg
+        width={canvasDimensions.x}
+        height={canvasDimensions.y}
+        xmlns="http://www.w3.org/2000/svg"
+        stroke="null"
+      >
         <MountainRange
           numberOfMountains={3}
           canvasDimensions={canvasDimensions}
@@ -52,11 +60,14 @@ const Scene = function () {
           seasonDuration={seasonDuration}
         />
 
-        <Lake surface={mountainBase} canvasDimensions={canvasDimensions} seasonDuration={seasonDuration} />
+        <Lake
+          surface={mountainBase}
+          canvasDimensions={canvasDimensions}
+          seasonDuration={seasonDuration}
+        />
       </svg>
-    </div >
+    </div>
   );
-}
-
+};
 
 export default Scene;

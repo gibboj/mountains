@@ -10,6 +10,7 @@ type LakeProps = {
   surface: number;
   seasonDuration: number;
 };
+
 const Lake: React.FC<LakeProps> = function ({
   canvasDimensions,
   surface,
@@ -24,7 +25,7 @@ const Lake: React.FC<LakeProps> = function ({
   );
 
   const getPointOnSin = (time: number) => {
-    return Math.sin((time % 31416) / 500) * 5 - 5;
+    return Math.sin((time % 31416) / 1000) * 5 - 5;
   };
 
   useAnimationFrame(
@@ -55,7 +56,7 @@ const Lake: React.FC<LakeProps> = function ({
     },
     [seasonDuration]
   );
-  const waveLength = 0;
+
   let waveColor = lakeColorTop;
   if (lakeColorTop) {
     waveColor = chroma(waveColor).darken(0.2).hex();
@@ -68,12 +69,12 @@ const Lake: React.FC<LakeProps> = function ({
           <stop offset="95%" stopColor={lakeColorBottom} />
         </linearGradient>
         <linearGradient id="waveGradient" gradientTransform="rotate(90)">
-          <stop offset="5%" stopColor={waveColor} opacity={1} />
+          <stop offset="5%" stopColor={waveColor} opacity={0.8} />
           <stop
             offset="95%"
             stopColor={lakeColorBottom}
-            stopOpacity={0.2}
-            opacity={0.2}
+            stopOpacity={0}
+            opacity={0}
           />
         </linearGradient>
       </defs>
@@ -92,9 +93,9 @@ const Lake: React.FC<LakeProps> = function ({
           <g key={`${index}_wave`}>
             <path
               d={`
-      ${SvgPath.move(p0x, p0y)}
+      ${SvgPath.move(p0x - waveHeight[wH] * 2, p0y)}
       ${SvgPath.lineTo(p1x, waveHeight[wH] / 2 + p1y + 2)}
-      ${SvgPath.lineTo(p2x, p2y)} Z`}
+      ${SvgPath.lineTo(p2x + waveHeight[wH] * 2, p2y)} Z`}
               fill="url(#waveGradient)"
             />
           </g>
@@ -108,8 +109,8 @@ const generateWaves = (
   surface: number,
   canvasDimensions: { x: number; y: number }
 ): Array<Array<number>> => {
-  const wavesRows = 5;
-  const wavesCols = 12;
+  const wavesRows = 3;
+  const wavesCols = 9;
   const offset = 10;
   const cHeight = (canvasDimensions.y - surface - offset) / wavesRows;
   const cWidth = canvasDimensions.x / wavesCols;
@@ -126,8 +127,8 @@ const generateWaves = (
       (Math.random() * (cHeight / 2) - cHeight / 4);
 
     const width =
-      Math.abs(Math.floor(index / wavesCols)) * 10 + 40; /* min-width */
-    console.log("Width", width, "Cols", Math.floor(index / wavesCols));
+      Math.abs(Math.floor(index / wavesCols)) * 10 + 60; /* min-width */
+
     return [
       xPos,
       yPos,

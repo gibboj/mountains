@@ -3,7 +3,6 @@ import { SvgPath } from "../utilities/SvgPath";
 const SNOW_DRIPS = 7;
 
 const generateSnow = (peakPoint: Point, basePoint: Point, position = 0.7) => {
-  //console.log(peakPoint)
   /** position of the snow line on a scale of  0 to 1, 1 being the peak */
   /**
    *        A

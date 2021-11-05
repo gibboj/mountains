@@ -1,4 +1,5 @@
 import { getColorInRange } from "../utilities/Color";
+import chroma from "chroma-js";
 import {
   FALL_MOUNTAIN_COLORS,
   SPRING_MOUNTAIN_COLORS,
@@ -112,7 +113,7 @@ export class SeasonHelper {
       }
       cumulativeTime += season.duration;
     });
-    // console.log((time % total) - cumulativeTime)
+
     return excessTime - cumulativeTime;
   }
 
@@ -134,7 +135,7 @@ export class SeasonHelper {
     return currentSeason;
   }
 
-  static getMountainColors(): {
+  static getMountainColors(colorCorrection: Array<[string, string]>): {
     colors: Array<string>;
     position: Array<number>;
   } {
@@ -144,9 +145,14 @@ export class SeasonHelper {
 
     for (let s = 0; s < seasons.length; s++) {
       timeProportion += seasons[s].duration;
-      colors.push(
-        getColorInRange({ range: seasons[s].features.mountains.colorRange })
-      );
+      let c = getColorInRange({
+        range: seasons[s].features.mountains.colorRange,
+      });
+      colorCorrection.map(([modeChannel, adjustment]) => {
+        c = chroma(c).set(modeChannel, adjustment).hex();
+      });
+      colors.push(c);
+
       position.push(timeProportion / SeasonHelper.getTotalDuration());
     }
     colors.unshift(colors[colors.length - 1]);

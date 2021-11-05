@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  SNOW_COLOR_RANGE_BOTTOM,
-  SNOW_COLOR_RANGE_TOP,
-} from "../constants/colors";
+import chroma from "chroma-js";
+import { SNOW_COLOR_RANGE } from "../constants/colors";
 import { ANIMATION_STATE, SeasonHelper } from "../constants/seasons";
 import { useAnimationFrame } from "../useAnimationFrame";
 import { getColorInRange } from "../utilities/Color";
@@ -17,6 +15,7 @@ type MountainOptions = {
   peakRange: Tuple;
   xStep: number;
   snowAnimation?: ANIMATION_STATE;
+  colorCorrection: Array<[string, string]>;
   seasonDuration: number;
 };
 
@@ -27,6 +26,7 @@ const Mountain: React.FC<MountainOptions> = function ({
   peakRange,
   xStep,
   snowAnimation,
+  colorCorrection,
   seasonDuration,
 }) {
   const baseX = (0.4 + Math.random()) * xStep;
@@ -37,7 +37,10 @@ const Mountain: React.FC<MountainOptions> = function ({
   const baseRight = peakX + baseX;
   //const [azimuth, setAzimuth] = useState(180);
   const [mountainPath, setMountainPath] = useState("");
-  const [colorRange] = useState(() => SeasonHelper.getMountainColors());
+  const [mountainShadowPath, setMountainShadowPath] = useState("");
+  const [colorRange] = useState(() =>
+    SeasonHelper.getMountainColors(colorCorrection)
+  );
   const [mountainColor, setMountainColor] = useState(
     getColorInRange({ range: colorRange.colors, domain: colorRange.position })
   );
@@ -55,7 +58,7 @@ const Mountain: React.FC<MountainOptions> = function ({
 
   const [snowPath, setSnowPath] = React.useState("");
   const [snowColor] = React.useState(
-    getColorInRange({ range: [SNOW_COLOR_RANGE_BOTTOM, SNOW_COLOR_RANGE_TOP] })
+    getColorInRange({ range: SNOW_COLOR_RANGE })
   );
   const [animation, setAnimation] = React.useState<MorphingAnimation | null>(
     null
@@ -97,6 +100,12 @@ const Mountain: React.FC<MountainOptions> = function ({
         baseY
       )}  ${SvgPath.lineTo(baseRight, baseY)} Z`
     );
+    setMountainShadowPath(
+      `${SvgPath.move(peakX, peakY)} ${SvgPath.lineTo(
+        baseRight,
+        baseY
+      )}  ${SvgPath.lineTo(peakX + baseX / 2, baseY)} Z`
+    );
     setupAnimationForSeason();
   }, []);
 
@@ -137,12 +146,22 @@ const Mountain: React.FC<MountainOptions> = function ({
           operator="arithmetic" k1="1" k2="0.2" k3="0" k4="0" />
       </filter> */}
 
+      <defs>
+        <linearGradient
+          id={`mountainColor_${i}`}
+          gradientTransform="rotate(90)"
+        >
+          <stop offset="5%" stopColor={mountainColor} />
+          <stop
+            offset="95%"
+            stopColor={chroma(mountainColor).darken(1).hex()}
+          />
+        </linearGradient>
+      </defs>
       <path
-        stroke={mountainColor}
-        strokeWidth={3}
         id={`mountain_${i}`}
         d={mountainPath}
-        fill={mountainColor}
+        fill={`url(#mountainColor_${i})`}
       />
       {
         <g>
@@ -150,6 +169,12 @@ const Mountain: React.FC<MountainOptions> = function ({
           <path id={`mountain_${i}_snow_top`} d={snowPath} fill={snowColor} />
         </g>
       }
+      <path
+        id={`mountain_${i}_darken`}
+        d={mountainShadowPath}
+        fill={chroma(mountainColor).darken(1).hex()}
+        opacity={0.2}
+      />
     </g>
   );
 };

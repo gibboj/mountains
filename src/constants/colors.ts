@@ -1,7 +1,6 @@
-export const SNOW_COLOR_RANGE_BOTTOM = 'FDFDF4';
-export const SNOW_COLOR_RANGE_TOP = 'E0EBE5';
+export const SNOW_COLOR_RANGE = ["E0EBE5", "FDFDF4"];
 
-export const WINTER_MOUNTAIN_COLORS = ['274472', 'C3E0E5'];
-export const SPRING_MOUNTAIN_COLORS = ['384646', 'BFBB5F', '4c4c42'];
-export const SUMMER_MOUNTAIN_COLORS = ['5B7C24', '464E19'];
-export const FALL_MOUNTAIN_COLORS = ['706D29', 'E59B3B', 'bb402d',]
+export const WINTER_MOUNTAIN_COLORS = ["274472", "C3E0E5"];
+export const SPRING_MOUNTAIN_COLORS = ["384646", "BFBB5F", "4c4c42"];
+export const SUMMER_MOUNTAIN_COLORS = ["5B7C24", "464E19"];
+export const FALL_MOUNTAIN_COLORS = ["706D29", "E59B3B", "bb402d"];

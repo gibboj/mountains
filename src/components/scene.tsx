@@ -4,6 +4,7 @@ import Lake from "./Lake";
 import { ANIMATION_STATE, SeasonHelper } from "../constants/seasons";
 import { useAnimationFrame } from "../useAnimationFrame";
 import { Tuple } from "../utilities/Math";
+import Clouds from "./Clouds";
 
 const Scene = function () {
   const [seasonName, setSeasonName] = useState<string>(
@@ -17,10 +18,13 @@ const Scene = function () {
   );
   const canvasDimensions = {
     x: window.document.documentElement.clientWidth,
-    y: 400,
+    y: 500,
   };
   const mountainBase = 5 * (canvasDimensions.y / 6);
-  const peakRange: Tuple = [canvasDimensions.y / 6, canvasDimensions.y / 2];
+  const peakRange: Tuple = [
+    canvasDimensions.y / 2,
+    (2 * canvasDimensions.y) / 5,
+  ];
 
   useAnimationFrame(
     (time) => {
@@ -47,6 +51,10 @@ const Scene = function () {
           canvasDimensions={canvasDimensions}
           base={mountainBase}
           peakRange={[peakRange[0] - 50, peakRange[1] - 50]}
+          colorCorrection={[
+            ["hsl.s", "/2"],
+            ["hsl.l", "*1.2"],
+          ]}
           snowAnimation={ANIMATION_STATE.NONE}
           seasonDuration={seasonDuration}
         />
@@ -56,6 +64,7 @@ const Scene = function () {
           canvasDimensions={canvasDimensions}
           base={mountainBase}
           peakRange={peakRange}
+          colorCorrection={[]}
           snowAnimation={snowState}
           seasonDuration={seasonDuration}
         />
@@ -65,6 +74,7 @@ const Scene = function () {
           canvasDimensions={canvasDimensions}
           seasonDuration={seasonDuration}
         />
+        <Clouds canvasDimensions={canvasDimensions} />
       </svg>
     </div>
   );

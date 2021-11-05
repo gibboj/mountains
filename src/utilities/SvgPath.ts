@@ -25,10 +25,10 @@ export class SvgPath {
   static lineTo(x: number, y: number): string;
   static lineTo(x: number | Tuple, y?: number) {
     if (typeof x === "number" && y !== undefined) {
-      return `L ${x} ${y}`;
+      return `L ${x},${y}`;
     }
 
-    return `L ${(x as Tuple)[0]} ${(x as Tuple)[1]}`;
+    return `L ${(x as Tuple)[0]},${(x as Tuple)[1]}`;
   }
 
   static curve(point: Tuple, ctl1: Tuple, ctl2?: Tuple) {
@@ -37,5 +37,9 @@ export class SvgPath {
     }
     return `C ${ctl1[0]} ${ctl1[1]} ${ctl2[0]} ${ctl2[1]},
      ${point[0]} ${point[1]}`;
+  }
+
+  static quadCurve(point: Tuple, ctl1: Tuple) {
+    return `Q ${ctl1[0]} ${ctl1[1]} ${point[0]} ${point[1]}`;
   }
 }

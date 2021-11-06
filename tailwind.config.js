@@ -8,7 +8,10 @@ module.exports = {
       },
       gridTemplateRows: {
         // Complex site-specific row configuration
-        layout: "50px auto 500px",
+        layout: "40px auto 500px",
+      },
+      minWidth: {
+        "min-w-400": "400px",
       },
     },
   },

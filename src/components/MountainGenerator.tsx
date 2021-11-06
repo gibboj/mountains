@@ -26,8 +26,8 @@ const MountainRange: React.FC<MountainRangeOptions> = function ({
   const xStep = canvasDimensions.x / numberOfMountains;
   const [mountianOrder] = useState<number[]>(() =>
     [...Array(numberOfMountains)]
-      .map((c, i) => i)
-      .sort((a, b) => (Math.random() < 0.5 ? -1 : 1))
+      .map((_, i) => i)
+      .sort(() => (Math.random() < 0.5 ? -1 : 1))
   );
   return (
     <g>

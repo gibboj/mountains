@@ -40,6 +40,6 @@ export class SvgPath {
   }
 
   static quadCurve(point: Tuple, ctl1: Tuple) {
-    return `Q ${ctl1[0]} ${ctl1[1]} ${point[0]} ${point[1]}`;
+    return `q ${ctl1[0]} ${ctl1[1]} ${point[0]} ${point[1]}`;
   }
 }

@@ -10,16 +10,20 @@ const Scene = function () {
   const [seasonName, setSeasonName] = useState<string>(
     SeasonHelper.getCurrentSeason(1).name
   );
+
   const [snowState, setSnowState] = useState<ANIMATION_STATE>(
     ANIMATION_STATE.FORWARD
   );
+
   const [seasonDuration, setSeasonDuration] = useState<number>(
     SeasonHelper.getCurrentSeason(1).duration
   );
+
   const canvasDimensions = {
     x: window.document.documentElement.clientWidth,
     y: 500,
   };
+
   const mountainBase = 5 * (canvasDimensions.y / 6);
   const peakRange: Tuple = [
     canvasDimensions.y / 2,
@@ -58,7 +62,7 @@ const Scene = function () {
           snowAnimation={ANIMATION_STATE.NONE}
           seasonDuration={seasonDuration}
         />
-
+        <Clouds canvasDimensions={canvasDimensions} />
         <MountainRange
           numberOfMountains={6}
           canvasDimensions={canvasDimensions}
@@ -74,7 +78,6 @@ const Scene = function () {
           canvasDimensions={canvasDimensions}
           seasonDuration={seasonDuration}
         />
-        <Clouds canvasDimensions={canvasDimensions} />
       </svg>
     </div>
   );

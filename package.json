@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "serve": "vite preview",
+    "serve": "vite preview --port 8080",
     "test": "jest",
     "lint": "eslint ./src --fix",
     "prepare": "husky install"

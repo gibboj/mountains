@@ -1776,6 +1776,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/jest@npm:^27.0.2":
+  version: 27.0.2
+  resolution: "@types/jest@npm:27.0.2"
+  dependencies:
+    jest-diff: ^27.0.0
+    pretty-format: ^27.0.0
+  checksum: 814ad5f5d2f277849f47e52906da4b745758e555630fc8cb46a071bde648eefeffb1b35710c530a8cea7fc4ea7c1d813812c120484bf7902ab6c5e473cdd49c9
+  languageName: node
+  linkType: hard
+
 "@types/json-schema@npm:^7.0.9":
   version: 7.0.9
   resolution: "@types/json-schema@npm:7.0.9"
@@ -1989,9 +1999,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitejs/plugin-react@npm:^1.0.7":
-  version: 1.0.7
-  resolution: "@vitejs/plugin-react@npm:1.0.7"
+"@vitejs/plugin-react@npm:1.0.5":
+  version: 1.0.5
+  resolution: "@vitejs/plugin-react@npm:1.0.5"
   dependencies:
     "@babel/core": ^7.15.5
     "@babel/plugin-transform-react-jsx": ^7.14.9
@@ -2001,7 +2011,7 @@ __metadata:
     "@rollup/pluginutils": ^4.1.1
     react-refresh: ^0.10.0
     resolve: ^1.20.0
-  checksum: 3efbb2b74d34f18a57de4d7a2940c7962303f192a66a94d6a149fa6ca426d6957d1573abcec1636b097119476fe8e559d59292a6796813bc18d09b34754eeddd
+  checksum: ce64556f73156fa95d48ad79f455f3bdb0351a7078ed57297db34dc92f75342f748894a5b2e9a1f946180ca00e8af530304d018d3765d17873d9cff92790c58d
   languageName: node
   linkType: hard
 
@@ -3939,6 +3949,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hamt_plus@npm:1.0.2":
+  version: 1.0.2
+  resolution: "hamt_plus@npm:1.0.2"
+  checksum: af26ea32db03009019cc83dfa9411521a2fa16079443de1a502c9be46d8b3c975acda8ed93fc5750ef08d3186d35901e2d8cfe717dd54bea67b358601fa74e4c
+  languageName: node
+  linkType: hard
+
 "has-bigints@npm:^1.0.1":
   version: 1.0.1
   resolution: "has-bigints@npm:1.0.1"
@@ -4109,6 +4126,15 @@ __metadata:
   dependencies:
     ms: ^2.0.0
   checksum: 9c7a74a2827f9294c009266c82031030eae811ca87b0da3dceb8d6071b9bde22c9f3daef0469c3c533cc67a97d8a167cd9fc0389350e5f415f61a79b171ded16
+  languageName: node
+  linkType: hard
+
+"husky@npm:^7.0.4":
+  version: 7.0.4
+  resolution: "husky@npm:7.0.4"
+  bin:
+    husky: lib/bin.js
+  checksum: c6ec4af63da2c9522da8674a20ad9b48362cc92704896cc8a58c6a2a39d797feb2b806f93fbd83a6d653fbdceb2c3b6e0b602c6b2e8565206ffc2882ef7db9e9
   languageName: node
   linkType: hard
 
@@ -4639,7 +4665,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-diff@npm:^27.3.1":
+"jest-diff@npm:^27.0.0, jest-diff@npm:^27.3.1":
   version: 27.3.1
   resolution: "jest-diff@npm:27.3.1"
   dependencies:
@@ -5282,10 +5308,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"luxon@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "luxon@npm:2.0.2"
-  checksum: eb2e366cf41a129704ae3213e0aea3e1504390af2a84322a5bbb6a22c92d96c7cb70e58b941a109c5e1bfbed51784d08130278feeee6cdf169940af90a68ded5
+"luxon@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "luxon@npm:2.1.0"
+  checksum: 3b4090a5d48343dd0d1123f8688b93e121ed2dc7910af967440fd977df30dae25bcb72870d3f72bab659d8f637c421bb9d7fbc6ad130c03b2bbb964fce16ac29
   languageName: node
   linkType: hard
 
@@ -5993,7 +6019,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^27.3.1":
+"pretty-format@npm:^27.0.0, pretty-format@npm:^27.3.1":
   version: 27.3.1
   resolution: "pretty-format@npm:27.3.1"
   dependencies:
@@ -6219,6 +6245,22 @@ __metadata:
   dependencies:
     picomatch: ^2.2.1
   checksum: 1ced032e6e45670b6d7352d71d21ce7edf7b9b928494dcaba6f11fba63180d9da6cd7061ebc34175ffda6ff529f481818c962952004d273178acd70f7059b320
+  languageName: node
+  linkType: hard
+
+"recoil@npm:^0.5.1":
+  version: 0.5.1
+  resolution: "recoil@npm:0.5.1"
+  dependencies:
+    hamt_plus: 1.0.2
+  peerDependencies:
+    react: ">=16.13.1"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: cd60fe5902592ee956edc072eaf6f1b16f4b64d199d11ad89e4382e89311d39805652828a83b33a0271c374446cdb43ada43af7210e6a670b3798159fbbae14b
   languageName: node
   linkType: hard
 
@@ -7234,26 +7276,29 @@ __metadata:
     "@babel/preset-env": ^7.16.0
     "@babel/preset-typescript": ^7.16.0
     "@types/chroma-js": ^2.1.3
+    "@types/jest": ^27.0.2
     "@types/luxon": ^2.0.5
     "@types/react": ^17.0.34
     "@types/react-dom": ^17.0.11
     "@types/react-router-dom": ^5.3.2
     "@typescript-eslint/eslint-plugin": latest
     "@typescript-eslint/parser": latest
-    "@vitejs/plugin-react": ^1.0.7
+    "@vitejs/plugin-react": 1.0.5
     autoprefixer: ^10.4.0
     chroma-js: ^2.1.2
     eslint: ^8.1.0
     eslint-config-prettier: ^8.3.0
     eslint-plugin-react: latest
     flubber: ^0.4.2
+    husky: ^7.0.4
     jest: ^27.3.1
-    luxon: ^2.0.2
+    luxon: ^2.1.0
     postcss: ^8.3.11
     react: ^17.0.2
     react-dom: ^17.0.2
     react-router: 6
     react-router-dom: ^5.3.0
+    recoil: ^0.5.1
     tailwindcss: ^2.2.19
     typescript: ^4.4.4
     vite: ^2.6.13

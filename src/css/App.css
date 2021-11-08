@@ -29,6 +29,12 @@
   @apply btn;
   @apply bg-blue-500 hover:bg-blue-700 text-white;
 }
+
+.btn-white {
+  @apply btn;
+  @apply bg-white hover:bg-blue-100 text-black;
+}
+
 .btn-outline {
   @apply btn;
   @apply border-blue-300 hover:border-blue-700 border-2;

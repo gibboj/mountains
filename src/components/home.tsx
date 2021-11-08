@@ -1,3 +1,5 @@
+import React from "react";
+import ControlPanel from "./ControlPanel";
 const Home = function () {
   return (
     <div className="px-28 min-w-400 mt-20">

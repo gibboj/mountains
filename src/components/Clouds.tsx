@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAnimationFrame } from "../useAnimationFrame";
 import { Tuple } from "../utilities/Math";
 import { SvgPath } from "../utilities/SvgPath";
@@ -13,9 +13,7 @@ type CloudPoints = {
 };
 
 const Clouds = ({ canvasDimensions }: CloudProps) => {
-  const [cloudData] = useState<CloudPoints[]>(() =>
-    generateCloudPoints(canvasDimensions)
-  );
+  const [cloudData] = useState<CloudPoints[]>(() => generateCloudPoints());
   const [cloudPaths, setCloudPaths] = useState<string[]>([]);
 
   useAnimationFrame((time) => {

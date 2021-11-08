@@ -1,4 +1,4 @@
-import { DateTime } from "luxon";
+import { DateTime, DateTimeFormatOptions } from "luxon";
 import React from "react";
 
 type Position = {
@@ -104,12 +104,11 @@ const Resume = () => {
   );
 };
 
-const Job: React.FC<JobProps> = ({
-  company,
-  positions,
-  bullets,
-}: JobProps & React.FC) => {
-  const dateFormat = { month: "long", year: "numeric" };
+const Job: React.FC<JobProps> = ({ company, positions, bullets }: JobProps) => {
+  const dateFormat: DateTimeFormatOptions = {
+    month: "long",
+    year: "numeric",
+  };
   const titles = positions.map(({ title, dates: { to, from } }) => {
     const dateString = `${from.toLocaleString(
       dateFormat

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import MountainRange from "./MountainGenerator";
 import Lake from "./Lake";
 import { ANIMATION_STATE, SeasonHelper } from "../constants/seasons";

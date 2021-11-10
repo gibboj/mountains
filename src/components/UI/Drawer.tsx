@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ControlPanel from "./ControlPanel";
 import MenuIcon from "./MenuIcon";
 
@@ -19,7 +19,9 @@ const Drawer = () => {
         style={{
           width: 180,
         }}
-        className={`${transforClasses} bg-gray-700 left-0 top-0 bottom-0  ease-in-out transition-transform  duration-500 py-2 px-4`}
+        className={`${transforClasses} bg-gray-700 left-0 
+          top-0 bottom-0  ease-in-out transition-transform 
+          duration-500 py-2 px-4`}
       >
         <MenuIcon onClick={handleOpenDrawer} />
         <ControlPanel />

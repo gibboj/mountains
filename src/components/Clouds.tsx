@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAnimationFrame } from "../useAnimationFrame";
 import { Tuple } from "../utilities/Math";
 import { SvgPath } from "../utilities/SvgPath";

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import Recoil, { useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import Mountain from "./Mountain";
 
 import { ANIMATION_STATE } from "../../constants/seasons";
@@ -17,7 +17,7 @@ type MountainRangeOptions = {
   snowAnimation?: ANIMATION_STATE;
 };
 
-const usePrevious = <T extends unknown>(value: T): T | undefined => {
+const usePrevious = <T,>(value: T): T | undefined => {
   const ref = useRef<T>();
   useEffect(() => {
     ref.current = value;
@@ -77,7 +77,7 @@ const MountainRange: React.FC<MountainRangeOptions> = function ({
     ]);
   }, [numberOfMountains]);
 
-  function addMountain(pos?: number) {
+  function addMountain() {
     setNumberOfMountains((oldList: MountainRangeState[]) =>
       oldList.map((v, i) =>
         i === index ? { ...v, mountainCount: v.mountainCount + 1 } : v
@@ -87,7 +87,7 @@ const MountainRange: React.FC<MountainRangeOptions> = function ({
 
   return (
     <g>
-      {mountainOrder.map((x, i) => {
+      {mountainOrder.map((x) => {
         return (
           <Mountain
             key={`mountain_elem_${x}`}

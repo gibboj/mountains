@@ -21,7 +21,7 @@ type MountainOptions = {
 
 const ANIMATION_KEYS = [20, 50, 80, 100];
 const WIDTH_VARIATION_RANGE: Tuple = [0.4, 1.4];
-const HEIGHT_VARIATION_RANGE: Tuple = [0.4, 1.4];
+
 const Mountain: React.FC<MountainOptions> = function ({
   i,
   base,

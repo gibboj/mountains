@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import chroma from "chroma-js";
-import { SNOW_COLOR_RANGE } from "../constants/colors";
-import { ANIMATION_STATE, SeasonHelper } from "../constants/seasons";
-import { useAnimationFrame } from "../useAnimationFrame";
-import { getColorInRange } from "../utilities/Color";
-import { getRandomFromRange, Tuple } from "../utilities/Math";
-import { SvgPath } from "../utilities/SvgPath";
-import { MorphingAnimation } from "./MorphingAnimation";
+import { SNOW_COLOR_RANGE } from "../../constants/colors";
+import { ANIMATION_STATE, SeasonHelper } from "../../constants/seasons";
+import { useAnimationFrame } from "../../useAnimationFrame";
+import { getColorInRange } from "../../utilities/Color";
+import { getRandomFromRange, Tuple } from "../../utilities/Math";
+import { SvgPath } from "../../utilities/SvgPath";
+import { MorphingAnimation } from "../MorphingAnimation";
 import generateSnow from "./SnowGenerator";
 
 type MountainOptions = {

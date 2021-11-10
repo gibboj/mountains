@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import MountainRange from "./MountainGenerator";
+import MountainRange from "./Mountains/MountainRange";
 import Lake from "./Lake";
 import { ANIMATION_STATE, SeasonHelper } from "../constants/seasons";
 import { useAnimationFrame } from "../useAnimationFrame";

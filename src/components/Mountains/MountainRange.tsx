@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Mountain from "./Mountain";
 
-import { ANIMATION_STATE } from "../constants/seasons";
-import { Tuple } from "../utilities/Math";
+import { ANIMATION_STATE } from "../../constants/seasons";
+import { Tuple } from "../../utilities/Math";
 
 type MountainRangeOptions = {
   base: number;

@@ -1,9 +1,9 @@
 import "./css/App.css";
 import { RecoilRoot } from "recoil";
-import Resume from "./components/resume";
-import Header from "./components/header";
-import Home from "./components/home";
-import Drawer from "./components/Drawer";
+import Resume from "./components/UI/resume";
+import Header from "./components/UI/header";
+import Home from "./components/UI/home";
+import Drawer from "./components/UI/Drawer";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Scene from "./components/scene";
 

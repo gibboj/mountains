@@ -1,5 +1,5 @@
-import { intersection, Point, Tuple } from "../utilities/Math";
-import { SvgPath } from "../utilities/SvgPath";
+import { intersection, Point, Tuple } from "../../utilities/Math";
+import { SvgPath } from "../../utilities/SvgPath";
 const SNOW_DRIPS = 7;
 
 const generateSnow = (peakPoint: Point, basePoint: Point, position = 0.7) => {

@@ -24,10 +24,10 @@ const generateSnow = (peakPoint: Point, basePoint: Point, position = 0.7) => {
   const E: Tuple = [peakPoint.x, basePoint.y + h * position];
   const F = intersection(A, B, E, D);
   const G: Tuple = [E[0] + (E[0] - F[0]), E[1]];
-
-  const curves = createSnowCurve(G, F, h, position);
-  return `${SvgPath.move(A)} ${SvgPath.lineTo(G)} ${curves} ${SvgPath.lineTo(
-    F
+  const halfWidth = peakPoint.x - basePoint.x;
+  const curves = createSnowCurve(F, G, h, position, halfWidth);
+  return `${SvgPath.move(A)} ${SvgPath.lineTo(F)} ${curves} ${SvgPath.lineTo(
+    G
   )}  Z`;
 };
 
@@ -35,10 +35,11 @@ function createSnowCurve(
   a: Tuple,
   b: Tuple,
   heightOfMountain: number,
-  position: number
+  position: number,
+  halfWidth: number
 ) {
-  const drips = SNOW_DRIPS;
-
+  let drips = Math.max(SNOW_DRIPS, halfWidth / 70);
+  drips = drips % 3 ? drips + 3 - (drips % 3) : drips;
   const dripWidth = (b[0] - a[0]) / drips;
   const dripHeight = heightOfMountain;
 

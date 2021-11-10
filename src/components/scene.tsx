@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+
 import MountainRange from "./Mountains/MountainRange";
+import {
+  mountainRangeState,
+  MountainRangeState,
+} from "./Mountains/MountainState";
 import Lake from "./Lake";
 import { ANIMATION_STATE, SeasonHelper } from "../constants/seasons";
 import { useAnimationFrame } from "../useAnimationFrame";
@@ -22,6 +28,9 @@ const Scene = function () {
     x: window.document.documentElement.clientWidth,
     y: 500,
   });
+
+  const moutainRanges: Array<MountainRangeState> =
+    useRecoilValue(mountainRangeState);
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,7 +57,7 @@ const Scene = function () {
         setSeasonDuration(newSeason.duration);
       }
     },
-    [seasonName, seasonDuration, snowState]
+    [seasonName, seasonDuration, snowState, moutainRanges]
   );
 
   return (
@@ -59,28 +68,27 @@ const Scene = function () {
         xmlns="http://www.w3.org/2000/svg"
         stroke="null"
       >
-        <MountainRange
-          numberOfMountains={3}
-          canvasDimensions={canvasDimensions}
-          base={mountainBase}
-          peakRange={[peakRange[0] - 50, peakRange[1] - 50]}
-          colorCorrection={[
-            ["hsl.s", "/2"],
-            ["hsl.l", "*1.2"],
-          ]}
-          snowAnimation={ANIMATION_STATE.NONE}
-          seasonDuration={seasonDuration}
-        />
         <Clouds canvasDimensions={canvasDimensions} />
-        <MountainRange
-          numberOfMountains={6}
-          canvasDimensions={canvasDimensions}
-          base={mountainBase}
-          peakRange={peakRange}
-          colorCorrection={[]}
-          snowAnimation={snowState}
-          seasonDuration={seasonDuration}
-        />
+
+        {moutainRanges.map((range: MountainRangeState, i) => {
+          const ccFactor = Math.max(0, range.mountainCount - i - 1);
+          return (
+            <MountainRange
+              key={`mountain_range_${i}`}
+              index={i}
+              numberOfMountains={range.mountainCount}
+              canvasDimensions={canvasDimensions}
+              base={mountainBase}
+              peakRange={[peakRange[0] + 50 * i, peakRange[1] + 50 * i]}
+              colorCorrection={[
+                ["hsl.s", `/${ccFactor + 1}`],
+                ["hsl.l", `*1.${ccFactor}`],
+              ]}
+              snowAnimation={range.animation ? snowState : ANIMATION_STATE.NONE}
+              seasonDuration={seasonDuration}
+            />
+          );
+        })}
 
         <Lake
           surface={mountainBase}

@@ -38,7 +38,7 @@ const Mountain: React.FC<MountainOptions> = function ({
 
   const baseLeft = peakX - baseX;
   const baseRight = peakX + baseX;
-  //const [azimuth, setAzimuth] = useState(180);
+
   const [mountainPath, setMountainPath] = useState("");
   const [mountainShadowPath, setMountainShadowPath] = useState("");
   const [colorRange] = useState(() =>
@@ -48,7 +48,7 @@ const Mountain: React.FC<MountainOptions> = function ({
     getColorInRange({ range: colorRange.colors, domain: colorRange.position })
   );
 
-  const [snowPaths] = useState<Array<string>>(
+  const [snowPaths, setSnowPaths] = useState<Array<string>>(
     (): Array<string> =>
       ANIMATION_KEYS.map((val) =>
         generateSnow(
@@ -110,12 +110,20 @@ const Mountain: React.FC<MountainOptions> = function ({
       )}  ${SvgPath.lineTo(peakX + baseX / 2, baseY)} Z`
     );
 
-    setupAnimationForSeason();
-  }, []);
+    setSnowPaths(
+      ANIMATION_KEYS.map((val) =>
+        generateSnow(
+          { x: peakX, y: peakY },
+          { x: baseLeft, y: baseY },
+          val / 100
+        )
+      )
+    );
+  }, [xStep]);
 
   useEffect(() => {
     setupAnimationForSeason();
-  }, [seasonDuration, snowAnimation]);
+  }, [seasonDuration, snowPaths, snowAnimation]);
 
   useAnimationFrame(
     (time) => {
@@ -132,7 +140,7 @@ const Mountain: React.FC<MountainOptions> = function ({
 
       setSnowPath(path);
     },
-    [animation, seasonDuration, snowAnimation]
+    [animation, seasonDuration, snowAnimation, xStep]
   );
 
   return (

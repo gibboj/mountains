@@ -6,7 +6,7 @@ import Home from "./components/UI/home";
 import Drawer from "./components/UI/Drawer";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Scene from "./components/scene";
-
+import state from "./state";
 function App() {
   return (
     <RecoilRoot>

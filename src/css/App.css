@@ -5,7 +5,7 @@
 @layer base {
   h1 {
     @apply text-lg;
-    @apply font-bold;
+    @apply font-normal;
   }
   h2 {
     @apply text-base;
@@ -23,7 +23,7 @@
   width: auto;
 }
 .btn {
-  @apply font-bold w-auto inline-flex items-center py-1 px-2 rounded-md;
+  @apply font-medium w-auto inline-flex items-center cursor-pointer  px-2 rounded-sm;
 }
 .btn-blue {
   @apply btn;

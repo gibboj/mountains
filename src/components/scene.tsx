@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MountainRange from "./MountainGenerator";
 import Lake from "./Lake";
 import { ANIMATION_STATE, SeasonHelper } from "../constants/seasons";
@@ -18,11 +18,20 @@ const Scene = function () {
   const [seasonDuration, setSeasonDuration] = useState<number>(
     SeasonHelper.getCurrentSeason(1).duration
   );
-
-  const canvasDimensions = {
+  const [canvasDimensions, setCanvasDimension] = useState({
     x: window.document.documentElement.clientWidth,
     y: 500,
-  };
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setCanvasDimension({
+        x: window.document.documentElement.clientWidth,
+        y: 500,
+      });
+    };
+    window.addEventListener("resize", handleResize);
+  }, []);
 
   const mountainBase = 5 * (canvasDimensions.y / 6);
   const peakRange: Tuple = [

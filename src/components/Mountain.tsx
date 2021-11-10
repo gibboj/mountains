@@ -4,7 +4,7 @@ import { SNOW_COLOR_RANGE } from "../constants/colors";
 import { ANIMATION_STATE, SeasonHelper } from "../constants/seasons";
 import { useAnimationFrame } from "../useAnimationFrame";
 import { getColorInRange } from "../utilities/Color";
-import { Tuple } from "../utilities/Math";
+import { getRandomFromRange, Tuple } from "../utilities/Math";
 import { SvgPath } from "../utilities/SvgPath";
 import { MorphingAnimation } from "./MorphingAnimation";
 import generateSnow from "./SnowGenerator";
@@ -20,6 +20,8 @@ type MountainOptions = {
 };
 
 const ANIMATION_KEYS = [20, 50, 80, 100];
+const WIDTH_VARIATION_RANGE: Tuple = [0.4, 1.4];
+const HEIGHT_VARIATION_RANGE: Tuple = [0.4, 1.4];
 const Mountain: React.FC<MountainOptions> = function ({
   i,
   base,
@@ -29,10 +31,11 @@ const Mountain: React.FC<MountainOptions> = function ({
   colorCorrection,
   seasonDuration,
 }) {
-  const baseX = (0.4 + Math.random()) * xStep;
+  const baseX = getRandomFromRange(WIDTH_VARIATION_RANGE) * xStep;
   const baseY = base;
-  const peakY = Math.random() * (peakRange[1] - peakRange[0]) + peakRange[0];
+  const peakY = getRandomFromRange(peakRange);
   const peakX = (i + 0.5) * xStep;
+
   const baseLeft = peakX - baseX;
   const baseRight = peakX + baseX;
   //const [azimuth, setAzimuth] = useState(180);
@@ -106,6 +109,7 @@ const Mountain: React.FC<MountainOptions> = function ({
         baseY
       )}  ${SvgPath.lineTo(peakX + baseX / 2, baseY)} Z`
     );
+
     setupAnimationForSeason();
   }, []);
 
@@ -116,6 +120,7 @@ const Mountain: React.FC<MountainOptions> = function ({
   useAnimationFrame(
     (time) => {
       const t = SeasonHelper.getTimeInSeason(time);
+      const path = animation ? animation.getPath(t) : "";
 
       setMountainColor(
         getColorInRange({
@@ -125,27 +130,13 @@ const Mountain: React.FC<MountainOptions> = function ({
         })
       );
 
-      const path = animation ? animation.getPath(t) : "";
       setSnowPath(path);
-      // animation && setSnowPathTop(animation.getPath(t + seasonDuration * 0.2))
     },
     [animation, seasonDuration, snowAnimation]
   );
 
   return (
     <g key={`mountain_${i}`} stroke="null">
-      {/* <filter id="lightMe1">
-
-        <feDiffuseLighting in="SourceGraphic" result="light"
-          lighting-color="#fcfbc2">
-
-          <fePointLight x={azimuth} y={0} z={200} />
-        </feDiffuseLighting>
-
-        <feComposite in="SourceGraphic" in2="light"
-          operator="arithmetic" k1="1" k2="0.2" k3="0" k4="0" />
-      </filter> */}
-
       <defs>
         <linearGradient
           id={`mountainColor_${i}`}
@@ -165,7 +156,6 @@ const Mountain: React.FC<MountainOptions> = function ({
       />
       {
         <g>
-          {/* <path stroke="none" id={`mountain_${i}_snow`} d={snowPathTop} fill={chroma(snowColor).darken(0.2).hex()} /> */}
           <path id={`mountain_${i}_snow_top`} d={snowPath} fill={snowColor} />
         </g>
       }

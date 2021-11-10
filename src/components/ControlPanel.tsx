@@ -5,12 +5,12 @@ const ControlPanel = () => {
   };
 
   const handleMountainAddButton = () => {
-    console.log("add cloud");
+    console.log("add mountain");
   };
 
   return (
-    <div>
-      <h1 className=" text-white  pt-8">Clouds</h1>
+    <div className={"text-right"}>
+      <h1 className=" text-white pt-8">Clouds</h1>
       <div
         className={" w-full text-white btn-white"}
         onClick={handleCloudAddButton}

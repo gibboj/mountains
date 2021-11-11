@@ -1,7 +1,7 @@
 import { intersection, Point, Tuple } from "../../utilities/Math";
 import { SvgPath } from "../../utilities/SvgPath";
 const SNOW_DRIPS = 7;
-
+const SNOW_DEPTH_PERCENTAGE = 0.1;
 const generateSnow = (peakPoint: Point, basePoint: Point, position = 0.7) => {
   /** position of the snow line on a scale of  0 to 1, 1 being the peak */
   /**
@@ -17,18 +17,32 @@ const generateSnow = (peakPoint: Point, basePoint: Point, position = 0.7) => {
    * B = basePoint
    * C = peakPoint.x, basePoint.y
    */
+
   const h = peakPoint.y - basePoint.y;
-  const A: Tuple = [peakPoint.x, peakPoint.y - 10];
+  const halfWidth = peakPoint.x - basePoint.x;
+
+  const depthOfSnowY = Math.abs(h * SNOW_DEPTH_PERCENTAGE);
+  const depthOfSnowX = Math.abs(depthOfSnowY * (halfWidth / h));
+
+  const A: Tuple = [peakPoint.x, peakPoint.y];
   const B: Tuple = [basePoint.x, basePoint.y];
   const D: Tuple = [basePoint.x, basePoint.y + h * position];
   const E: Tuple = [peakPoint.x, basePoint.y + h * position];
   const F = intersection(A, B, E, D);
   const G: Tuple = [E[0] + (E[0] - F[0]), E[1]];
-  const halfWidth = peakPoint.x - basePoint.x;
-  const curves = createSnowCurve(F, G, h, position, halfWidth);
-  return `${SvgPath.move(A)} ${SvgPath.lineTo(F)} ${curves} ${SvgPath.lineTo(
-    G
-  )}  Z`;
+  const Fprime = [F[0] - depthOfSnowX, F[1]] as Tuple;
+  const Gprime = [G[0] + depthOfSnowX, G[1]] as Tuple;
+  const curves = createSnowCurve(
+    Fprime,
+    Gprime,
+    h,
+    position,
+    halfWidth + depthOfSnowX * 2
+  );
+  const Aprime = [peakPoint.x, peakPoint.y - depthOfSnowY] as Tuple;
+  return `${SvgPath.move(Aprime)} ${SvgPath.lineTo(
+    Fprime
+  )} ${curves} ${SvgPath.lineTo(Gprime)}  Z`;
 };
 
 function createSnowCurve(

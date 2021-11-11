@@ -17,7 +17,7 @@ type MountainRangeOptions = {
   snowAnimation?: ANIMATION_STATE;
 };
 
-const usePrevious = <T,>(value: T): T | undefined => {
+const usePrevious = <T extends unknown>(value: T): T | undefined => {
   const ref = useRef<T>();
   useEffect(() => {
     ref.current = value;

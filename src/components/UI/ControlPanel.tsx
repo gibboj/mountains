@@ -1,10 +1,10 @@
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import PanelGroup from "./PanelGroup";
-import { IconButton, FormControlLabel } from "@mui/material";
+import { FormGroup, IconButton, FormControlLabel } from "@mui/material";
 import Switch from "@mui/material/Switch";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-//import { AddIcon, RemoveIcon } from "@mui/icons-material";
+
 import {
   MountainRangeState,
   mountainRangeState,
@@ -53,34 +53,57 @@ const ControlPanel = () => {
         {mountainRanges.map((x: MountainRangeState, i: number) => {
           const snowSwitch = (
             <Switch
+              sx={{
+                marginLeft: "16px",
+              }}
               checked={x.animation}
               onChange={() => handleSnowAnimation(i)}
               size="small"
-              label={<label>Animation</label>}
             />
+          );
+          const addButton = (
+            <FormGroup
+              sx={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginLeft: "16px",
+              }}
+            >
+              <IconButton
+                color="primary"
+                aria-label="remove"
+                onClick={() => handleMountainRemoveButton(i)}
+              >
+                <RemoveIcon />
+              </IconButton>
+              <span className="text-lg"> {x.mountainCount}</span>
+              <IconButton
+                color="primary"
+                onClick={() => handleMountainAddButton(i)}
+                aria-label="add"
+              >
+                <AddIcon />
+              </IconButton>
+            </FormGroup>
           );
 
           return (
             <div key={`add_mt_btn_i${i}`} className="py-2">
               <FormControlLabel
                 className="ml-0"
-                value="top"
+                value="start"
                 control={snowSwitch}
-                label="Animations"
+                label="Show Snow"
                 labelPlacement="start"
               />
-              <label className="block">Count</label>
-              <IconButton
-                variant="contained"
-                onClick={() => handleMountainAddButton(i)}
-                aria-label="delete"
-              >
-                <AddIcon />
-              </IconButton>
-              <span className="px-4"> {x.mountainCount}</span>
-              <IconButton onClick={() => handleMountainRemoveButton(i)}>
-                <RemoveIcon />
-              </IconButton>
+
+              <FormControlLabel
+                className="ml-0"
+                value="top"
+                control={addButton}
+                label="# Mountains"
+                labelPlacement="start"
+              />
             </div>
           );
         })}

@@ -30,7 +30,9 @@ const Lake: React.FC<LakeProps> = function ({
 
   useAnimationFrame(
     (time) => {
-      const percentage = time / SeasonHelper.getTotalDuration();
+      const percentage =
+        (time % SeasonHelper.getTotalDuration()) /
+        SeasonHelper.getTotalDuration();
 
       setLakeColorTop(
         getColorInRange({

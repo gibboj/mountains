@@ -11,7 +11,7 @@ export const useAnimationFrame = (
 
   const animate = (time: number) => {
     if (previousTimeRef.current != undefined) {
-      callback(time % SeasonHelper.getTotalDuration());
+      callback(time);
     }
     previousTimeRef.current = time;
     requestRef.current = requestAnimationFrame(animate);

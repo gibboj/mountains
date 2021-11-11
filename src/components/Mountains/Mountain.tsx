@@ -129,12 +129,12 @@ const Mountain: React.FC<MountainOptions> = function ({
     (time) => {
       const t = SeasonHelper.getTimeInSeason(time);
       const path = animation ? animation.getPath(t) : "";
-
+      const duration = SeasonHelper.getTotalDuration();
       setMountainColor(
         getColorInRange({
           range: colorRange.colors,
           domain: colorRange.position,
-          percentage: time / SeasonHelper.getTotalDuration(),
+          percentage: (time % duration) / duration,
         })
       );
 

@@ -1,7 +1,7 @@
 import { intersection, Point, Tuple } from "../../utilities/Math";
 import { SvgPath } from "../../utilities/SvgPath";
 const SNOW_DRIPS = 7;
-const SNOW_DEPTH_PERCENTAGE = 0.1;
+const SNOW_DEPTH_PERCENTAGE = 0.05;
 const generateSnow = (peakPoint: Point, basePoint: Point, position = 0.7) => {
   /** position of the snow line on a scale of  0 to 1, 1 being the peak */
   /**

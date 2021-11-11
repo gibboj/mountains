@@ -50,7 +50,9 @@ const Scene = function () {
 
   useAnimationFrame(
     (time) => {
-      const newSeason = SeasonHelper.getCurrentSeason(time);
+      const newSeason = SeasonHelper.getCurrentSeason(
+        time % SeasonHelper.getTotalDuration()
+      );
       if (newSeason.name !== seasonName) {
         setSeasonName(newSeason.name);
         setSnowState(newSeason.features.mountains.snowState);

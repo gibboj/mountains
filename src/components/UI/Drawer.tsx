@@ -5,8 +5,8 @@ import MenuIcon from "./MenuIcon";
 const Drawer = () => {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
   const transforClasses = drawerOpen
-    ? " transform translate-x-0 fixed"
-    : "transform -translate-x-full absolute right-0 left-0";
+    ? "transform translate-x-0"
+    : "transform -translate-x-full right-0 left-0";
 
   const handleOpenDrawer = () => {
     setDrawerOpen(!drawerOpen);
@@ -20,7 +20,7 @@ const Drawer = () => {
           width: 210,
         }}
         className={`${transforClasses} bg-gray-700 left-0 
-          top-0 bottom-0  ease-in-out transition-transform 
+          top-0 bottom-0 fixed ease-in-out transition-transform 
           duration-500 `}
       >
         <MenuIcon onClick={handleOpenDrawer} />

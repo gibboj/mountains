@@ -67,14 +67,22 @@ const MountainRange: React.FC<MountainRangeOptions> = function ({
       addMountain();
     }
   }, [canvasDimensions]);
+
   useEffect(() => {
     const spot = Math.floor(Math.random() * mountainOrder.length);
     setXStep(canvasDimensions.x / numberOfMountains);
-    setMountainOrder([
-      ...mountainOrder.slice(0, spot),
-      mountainOrder.length,
-      ...mountainOrder.slice(spot),
-    ]);
+    if (numberOfMountains > mountainOrder.length) {
+      setMountainOrder([
+        ...mountainOrder.slice(0, spot),
+        mountainOrder.length,
+        ...mountainOrder.slice(spot),
+      ]);
+    } else if (numberOfMountains < mountainOrder.length) {
+      const a = mountainOrder.filter((a) => {
+        return a !== mountainOrder.length - 1;
+      });
+      setMountainOrder(a);
+    }
   }, [numberOfMountains]);
 
   function addMountain() {

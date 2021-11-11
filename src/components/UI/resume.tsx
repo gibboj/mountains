@@ -26,7 +26,12 @@ const jobs = [
         },
       },
     ],
-    bullets: ["Implemented the sheet renderer and drawing layer, 3 times"],
+    bullets: [
+      "Redesigned and implemented the web tool for rendering & annotating blueprints.",
+      "Prototyped web 3d model viewing tool using Autodesk 3d renderer, integrating it into Plangrid’s 2d viewing experience",
+      "Implemented the new annotation rendering on web for the new merged Plangrid & Autodesk application.",
+      "Brought a hackathon project to production which standardized and automated tracking calls between platforms",
+    ],
   },
   {
     company: "CoinTent",
@@ -90,12 +95,16 @@ const Resume = () => {
     <div className="px-28">
       <h1>Experience</h1>
       {jobElements}
+
       <h1>Education</h1>
-      <p>University of Pennsylvania</p>
-      <p> Digital Media Design, BSE</p>
-      <span>September 2005 - May 2009</span>
-      <p>Senior Thesis - Interactive Computer Animation</p>
-      <p>
+      <h2 className="pt-8">University of Pennsylvania</h2>
+      <h3>
+        {" "}
+        <span className="font-medium">Digital Media Design, BSE</span>
+        {` | September 2005 - May 2009`}
+      </h3>
+      <p className="text-sm">Senior Thesis - Interactive Computer Animation</p>
+      <p className="text-sm">
         - Programmed a haptic device to pose a human character using motion
         capture data which to help the end user create of the most natural
         looking human animation.

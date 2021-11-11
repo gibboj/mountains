@@ -4,8 +4,8 @@
 
 @layer base {
   h1 {
-    @apply text-lg;
-    @apply font-normal;
+    @apply text-3xl;
+    @apply font-light;
   }
   h2 {
     @apply text-base;

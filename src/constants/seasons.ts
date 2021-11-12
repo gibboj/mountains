@@ -10,7 +10,7 @@ import {
 export const WINTER_LENGTH = 12000;
 export const SPRING_LENGTH = 12000;
 export const SUMMER_LENGTH = 12000;
-export const FALL_LENGTH = 15000;
+export const FALL_LENGTH = 12000;
 
 export type Seasons = "winter" | "spring" | "summer" | "fall";
 
@@ -100,6 +100,16 @@ export class SeasonHelper {
 
   static getSeasonDuration(time: number) {
     return this.getCurrentSeason(time).duration;
+  }
+
+  static getSeasonDurationByName(name: string) {
+    const season = seasons.find((s) => {
+      return s.name === name;
+    });
+    if (!season) {
+      throw new Error("cant find season");
+    }
+    return season?.duration;
   }
 
   static getTimeInSeason(time: number) {

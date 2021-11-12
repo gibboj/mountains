@@ -16,7 +16,7 @@ type MountainOptions = {
   xStep: number;
   snowAnimation?: ANIMATION_STATE;
   colorCorrection: Array<[string, string]>;
-  seasonDuration: number;
+  currentSeason: string;
 };
 
 const ANIMATION_KEYS = [20, 50, 80, 100];
@@ -27,9 +27,9 @@ const Mountain: React.FC<MountainOptions> = function ({
   baseLine, // Base of the mountain y coordinate
   peakRange, // Range where peak of mountain should fall
   xStep, // Standard spacing for mountain
-  snowAnimation,
+  snowAnimation: snowAnimationState,
   colorCorrection,
-  seasonDuration,
+  currentSeason,
 }) {
   const baseX = getRandomFromRange(WIDTH_VARIATION_RANGE) * xStep;
   const baseY = baseLine;
@@ -71,29 +71,34 @@ const Mountain: React.FC<MountainOptions> = function ({
     if (snowPaths.length === 0) {
       return;
     }
-    let anim = null;
-    const newKeyFrames = snowPaths.reduce((acc, val, index) => {
+
+    const keyFrames = getKeyFrames(snowPaths);
+    const anim = getAnimation(keyFrames);
+    setAnimation(anim);
+  };
+
+  function getKeyFrames(snowPaths: string[]): number[] {
+    const seasonDuration = SeasonHelper.getSeasonDurationByName(currentSeason);
+    return snowPaths.reduce((acc, _, index) => {
       if (index > 0) {
         acc.push(index * (seasonDuration / (snowPaths.length - 1)));
       }
       return acc;
     }, [] as Array<number>);
+  }
 
-    switch (snowAnimation) {
+  const getAnimation = (keyFrames: number[]): MorphingAnimation | undefined => {
+    switch (snowAnimationState) {
       case ANIMATION_STATE.BACKWARD: {
-        anim = new MorphingAnimation(snowPaths, newKeyFrames);
-        break;
+        return new MorphingAnimation(snowPaths, keyFrames);
       }
       case ANIMATION_STATE.FORWARD: {
-        anim = new MorphingAnimation([...snowPaths].reverse(), newKeyFrames);
-        break;
+        return new MorphingAnimation([...snowPaths].reverse(), keyFrames);
       }
       case ANIMATION_STATE.STOP_END: {
-        anim = new MorphingAnimation([snowPaths[0]], []);
-        break;
+        return new MorphingAnimation([snowPaths[0]], []);
       }
     }
-    setAnimation(anim);
   };
 
   useEffect(() => {
@@ -123,7 +128,7 @@ const Mountain: React.FC<MountainOptions> = function ({
 
   useEffect(() => {
     setupAnimationForSeason();
-  }, [seasonDuration, snowPaths, snowAnimation]);
+  }, [currentSeason, snowPaths, snowAnimationState]);
 
   useAnimationFrame(
     (time) => {
@@ -140,11 +145,11 @@ const Mountain: React.FC<MountainOptions> = function ({
 
       setSnowPath(path);
     },
-    [animation, seasonDuration, snowAnimation, xStep]
+    [animation, currentSeason, snowAnimationState, xStep]
   );
 
   return (
-    <g key={`mountain_${index}`} stroke="null">
+    <g key={`mountain_${index}`}>
       <defs>
         <linearGradient
           id={`mountainColor_${index}`}

@@ -13,6 +13,9 @@ module.exports = {
       minWidth: {
         "min-w-400": "400px",
       },
+      transitionProperty: {
+        height: "height, visibility",
+      },
     },
   },
   variants: {

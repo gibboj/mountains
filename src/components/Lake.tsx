@@ -8,13 +8,13 @@ import { SvgPath } from "../utilities/SvgPath";
 type LakeProps = {
   canvasDimensions: { x: number; y: number };
   surface: number;
-  seasonDuration: number;
+  currentSeason: string;
 };
 
 const Lake: React.FC<LakeProps> = function ({
   canvasDimensions,
   surface,
-  seasonDuration,
+  currentSeason,
 }: LakeProps) {
   const [lakeColors] = useState(SeasonHelper.getLakeColors());
   const [lakeColorTop, setLakeColorTop] = useState<string>("");
@@ -56,7 +56,7 @@ const Lake: React.FC<LakeProps> = function ({
         getPointOnSin(time + 7000),
       ]);
     },
-    [seasonDuration]
+    [currentSeason]
   );
 
   let waveColor = lakeColorTop;

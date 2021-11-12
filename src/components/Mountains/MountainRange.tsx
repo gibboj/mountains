@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import Mountain from "./Mountain";
 
 import { ANIMATION_STATE } from "../../constants/seasons";
 import { Tuple } from "../../utilities/Math";
 import { MountainRangeState, mountainRangeState } from "./MountainState";
+import usePrevious from "../../utilities/usePrevious";
 
 type MountainRangeOptions = {
   base: number;
@@ -13,16 +14,8 @@ type MountainRangeOptions = {
   colorCorrection: Array<[string, string]>;
   peakRange: Tuple;
   numberOfMountains: number;
-  seasonDuration: number;
-  snowAnimation?: ANIMATION_STATE;
-};
-
-const usePrevious = <T extends unknown>(value: T): T | undefined => {
-  const ref = useRef<T>();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
+  currentSeason: string;
+  snowAnimationState?: ANIMATION_STATE;
 };
 
 const MountainRange: React.FC<MountainRangeOptions> = function ({
@@ -32,8 +25,8 @@ const MountainRange: React.FC<MountainRangeOptions> = function ({
   colorCorrection,
   numberOfMountains,
   peakRange,
-  seasonDuration,
-  snowAnimation,
+  currentSeason,
+  snowAnimationState: snowAnimation,
 }) {
   const [xStep, setXStep] = useState(() => {
     return window.document.documentElement.clientWidth / numberOfMountains;
@@ -99,13 +92,13 @@ const MountainRange: React.FC<MountainRangeOptions> = function ({
         return (
           <Mountain
             key={`mountain_elem_${x}`}
-            i={x}
-            base={base}
+            index={x}
+            baseLine={base}
             peakRange={peakRange}
             xStep={xStep}
             colorCorrection={colorCorrection}
             snowAnimation={snowAnimation}
-            seasonDuration={seasonDuration}
+            currentSeason={currentSeason}
           />
         );
       })}

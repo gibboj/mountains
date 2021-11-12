@@ -13,7 +13,7 @@ import { Tuple } from "../utilities/Math";
 import Clouds from "./Clouds";
 
 const Scene = function () {
-  const [seasonName, setSeasonName] = useState<string>(
+  const [currentSeason, setCurrentSeasonName] = useState<string>(
     SeasonHelper.getCurrentSeason(1).name
   );
 
@@ -21,9 +21,6 @@ const Scene = function () {
     ANIMATION_STATE.FORWARD
   );
 
-  const [seasonDuration, setSeasonDuration] = useState<number>(
-    SeasonHelper.getCurrentSeason(1).duration
-  );
   const [canvasDimensions, setCanvasDimension] = useState({
     x: window.document.documentElement.clientWidth,
     y: 500,
@@ -53,13 +50,12 @@ const Scene = function () {
       const newSeason = SeasonHelper.getCurrentSeason(
         time % SeasonHelper.getTotalDuration()
       );
-      if (newSeason.name !== seasonName) {
-        setSeasonName(newSeason.name);
+      if (newSeason.name !== currentSeason) {
+        setCurrentSeasonName(newSeason.name);
         setSnowState(newSeason.features.mountains.snowState);
-        setSeasonDuration(newSeason.duration);
       }
     },
-    [seasonName, seasonDuration, snowState, moutainRanges]
+    [currentSeason, snowState, moutainRanges]
   );
 
   return (
@@ -86,8 +82,10 @@ const Scene = function () {
                 ["hsl.s", `/${ccFactor + 1}`],
                 ["hsl.l", `*1.${ccFactor}`],
               ]}
-              snowAnimation={range.animation ? snowState : ANIMATION_STATE.NONE}
-              seasonDuration={seasonDuration}
+              snowAnimationState={
+                range.animation ? snowState : ANIMATION_STATE.NONE
+              }
+              currentSeason={currentSeason}
             />
           );
         })}
@@ -95,7 +93,7 @@ const Scene = function () {
         <Lake
           surface={mountainBase}
           canvasDimensions={canvasDimensions}
-          seasonDuration={seasonDuration}
+          currentSeason={currentSeason}
         />
       </svg>
     </div>

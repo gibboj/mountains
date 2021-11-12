@@ -14,7 +14,7 @@ const Drawer = () => {
 
   return (
     <>
-      <MenuIcon onClick={handleOpenDrawer} />
+      <MenuIcon className="absolute top-2 left-2" onClick={handleOpenDrawer} />
       <div
         style={{
           width: 210,
@@ -23,7 +23,7 @@ const Drawer = () => {
           top-0 bottom-0 fixed ease-in-out transition-transform 
           duration-500 `}
       >
-        <MenuIcon onClick={handleOpenDrawer} />
+        <MenuIcon className=" pl-2 pt-2" onClick={handleOpenDrawer} />
         <ControlPanel />
       </div>
     </>

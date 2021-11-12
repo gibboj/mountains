@@ -1,9 +1,10 @@
 type MenuIcon = {
   onClick: () => void;
+  className: string;
 };
-const MenuIcon = ({ onClick }: MenuIcon) => {
+const MenuIcon = ({ onClick, className }: MenuIcon) => {
   return (
-    <div className={"text-red-700 absolute top-2 left-2"}>
+    <div className={`text-white ${className} `}>
       <svg
         width={30}
         height={30}

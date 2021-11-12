@@ -10,8 +10,8 @@ import { MorphingAnimation } from "../MorphingAnimation";
 import generateSnow from "./SnowGenerator";
 
 type MountainOptions = {
-  i: number;
-  base: number;
+  index: number;
+  baseLine: number;
   peakRange: Tuple;
   xStep: number;
   snowAnimation?: ANIMATION_STATE;
@@ -23,18 +23,18 @@ const ANIMATION_KEYS = [20, 50, 80, 100];
 const WIDTH_VARIATION_RANGE: Tuple = [0.4, 1.4];
 
 const Mountain: React.FC<MountainOptions> = function ({
-  i,
-  base,
-  peakRange,
-  xStep,
+  index,
+  baseLine, // Base of the mountain y coordinate
+  peakRange, // Range where peak of mountain should fall
+  xStep, // Standard spacing for mountain
   snowAnimation,
   colorCorrection,
   seasonDuration,
 }) {
   const baseX = getRandomFromRange(WIDTH_VARIATION_RANGE) * xStep;
-  const baseY = base;
+  const baseY = baseLine;
   const peakY = getRandomFromRange(peakRange);
-  const peakX = (i + 0.5) * xStep;
+  const peakX = (index + 0.5) * xStep;
 
   const baseLeft = peakX - baseX;
   const baseRight = peakX + baseX;
@@ -144,10 +144,10 @@ const Mountain: React.FC<MountainOptions> = function ({
   );
 
   return (
-    <g key={`mountain_${i}`} stroke="null">
+    <g key={`mountain_${index}`} stroke="null">
       <defs>
         <linearGradient
-          id={`mountainColor_${i}`}
+          id={`mountainColor_${index}`}
           gradientTransform="rotate(90)"
         >
           <stop offset="5%" stopColor={mountainColor} />
@@ -158,17 +158,21 @@ const Mountain: React.FC<MountainOptions> = function ({
         </linearGradient>
       </defs>
       <path
-        id={`mountain_${i}`}
+        id={`mountain_${index}`}
         d={mountainPath}
-        fill={`url(#mountainColor_${i})`}
+        fill={`url(#mountainColor_${index})`}
       />
       {
         <g>
-          <path id={`mountain_${i}_snow_top`} d={snowPath} fill={snowColor} />
+          <path
+            id={`mountain_${index}_snow_top`}
+            d={snowPath}
+            fill={snowColor}
+          />
         </g>
       }
       <path
-        id={`mountain_${i}_darken`}
+        id={`mountain_${index}_darken`}
         d={mountainShadowPath}
         fill={chroma(mountainColor).darken(1).hex()}
         opacity={0.2}

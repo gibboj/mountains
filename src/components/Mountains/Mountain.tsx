@@ -87,7 +87,7 @@ const Mountain: React.FC<MountainOptions> = function ({
     }, [] as Array<number>);
   }
 
-  const getAnimation = (keyFrames: number[]): MorphingAnimation | undefined => {
+  const getAnimation = (keyFrames: number[]): MorphingAnimation | null => {
     switch (snowAnimationState) {
       case ANIMATION_STATE.BACKWARD: {
         return new MorphingAnimation(snowPaths, keyFrames);
@@ -98,6 +98,8 @@ const Mountain: React.FC<MountainOptions> = function ({
       case ANIMATION_STATE.STOP_END: {
         return new MorphingAnimation([snowPaths[0]], []);
       }
+      default:
+        return null;
     }
   };
 

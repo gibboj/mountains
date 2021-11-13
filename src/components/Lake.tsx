@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { SeasonHelper } from "../constants/seasons";
 import { useAnimationFrame } from "../useAnimationFrame";
 import { getColorInRange } from "../utilities/Color";
+import { useRecoilValue } from "recoil";
 import chroma from "chroma-js";
+import { totalSeasonDuration } from "./SeasonState";
 import { SvgPath } from "../utilities/SvgPath";
 
 type LakeProps = {
@@ -23,16 +25,14 @@ const Lake: React.FC<LakeProps> = function ({
   const [waves] = useState<number[][]>(() =>
     generateWaves(surface, canvasDimensions)
   );
-
+  const totalDuration = useRecoilValue(totalSeasonDuration);
   const getPointOnSin = (time: number) => {
     return Math.sin((time % 31416) / 1000) * 5 - 5;
   };
 
   useAnimationFrame(
     (time) => {
-      const percentage =
-        (time % SeasonHelper.getTotalDuration()) /
-        SeasonHelper.getTotalDuration();
+      const percentage = (time % totalDuration) / totalDuration;
 
       setLakeColorTop(
         getColorInRange({

@@ -8,6 +8,8 @@ import { getRandomFromRange, Tuple } from "../../utilities/Math";
 import { SvgPath } from "../../utilities/SvgPath";
 import { MorphingAnimation } from "../MorphingAnimation";
 import generateSnow from "./SnowGenerator";
+import { useRecoilValue } from "recoil";
+import { totalSeasonDuration } from "../SeasonState";
 
 type MountainOptions = {
   index: number;
@@ -38,7 +40,7 @@ const Mountain: React.FC<MountainOptions> = function ({
 
   const baseLeft = peakX - baseX;
   const baseRight = peakX + baseX;
-
+  const totalDuration = useRecoilValue(totalSeasonDuration);
   const [mountainPath, setMountainPath] = useState("");
   const [mountainShadowPath, setMountainShadowPath] = useState("");
   const [colorRange] = useState(() =>
@@ -136,7 +138,7 @@ const Mountain: React.FC<MountainOptions> = function ({
     (time) => {
       const t = SeasonHelper.getTimeInSeason(time);
       const path = animation ? animation.getPath(t) : "";
-      const duration = SeasonHelper.getTotalDuration();
+      const duration = totalDuration;
       setMountainColor(
         getColorInRange({
           range: colorRange.colors,
@@ -147,7 +149,7 @@ const Mountain: React.FC<MountainOptions> = function ({
 
       setSnowPath(path);
     },
-    [animation, currentSeason, snowAnimationState, xStep]
+    [animation, totalDuration, currentSeason, snowAnimationState, xStep]
   );
 
   return (

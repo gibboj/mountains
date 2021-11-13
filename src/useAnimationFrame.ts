@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { SeasonHelper } from "./constants/seasons";
+
 export const useAnimationFrame = (
   callback: FrameRequestCallback,
   deps?: Array<unknown>

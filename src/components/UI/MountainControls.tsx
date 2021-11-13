@@ -40,7 +40,7 @@ const MountainControls = () => {
 
   return (
     <PanelGroup title={"Mountains"}>
-      <h2 className=""> Ranges (back to front) </h2>
+      <h3 className="px-2 pt-2"> Ranges (back to front) </h3>
       {mountainRanges.map((x: MountainRangeState, i: number) => {
         const snowSwitch = (
           <Switch

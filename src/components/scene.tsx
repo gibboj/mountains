@@ -6,6 +6,7 @@ import {
   mountainRangeState,
   MountainRangeState,
 } from "./Mountains/MountainState";
+import { totalSeasonDuration } from "./SeasonState";
 import Lake from "./Lake";
 import { ANIMATION_STATE, SeasonHelper } from "../constants/seasons";
 import { useAnimationFrame } from "../useAnimationFrame";
@@ -25,6 +26,8 @@ const Scene = function () {
     x: window.document.documentElement.clientWidth,
     y: 500,
   });
+
+  const totalDuration = useRecoilValue(totalSeasonDuration);
 
   const moutainRanges: Array<MountainRangeState> =
     useRecoilValue(mountainRangeState);
@@ -47,10 +50,9 @@ const Scene = function () {
 
   useAnimationFrame(
     (time) => {
-      const newSeason = SeasonHelper.getCurrentSeason(
-        time % SeasonHelper.getTotalDuration()
-      );
+      const newSeason = SeasonHelper.getCurrentSeason(time % totalDuration);
       if (newSeason.name !== currentSeason) {
+        console.log(newSeason.name, currentSeason, totalDuration);
         setCurrentSeasonName(newSeason.name);
         setSnowState(newSeason.features.mountains.snowState);
       }

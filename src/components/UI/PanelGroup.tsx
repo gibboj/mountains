@@ -20,7 +20,7 @@ const PanelGroup: React.FC<PanelGroupProps> = function ({
   return (
     <div className="relative ">
       <div
-        className="flex justify-between bg-gray-600 px-2 py-3 "
+        className="flex justify-between bg-gray-600 px-2 py-3 cursor-pointer"
         onClick={openPanel}
       >
         <h2 className="">{title}</h2>

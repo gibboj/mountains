@@ -1,35 +1,40 @@
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import MountainRange from "./Mountains/MountainRange";
 import {
   mountainRangeState,
   MountainRangeState,
 } from "./Mountains/MountainState";
-import { totalSeasonDuration } from "./SeasonState";
+import {
+  currentSeasonState,
+  seasonState,
+  SeasonState,
+  totalYearDuration,
+} from "./SeasonState";
 import Lake from "./Lake";
-import { ANIMATION_STATE, SeasonHelper } from "../constants/seasons";
+
 import { useAnimationFrame } from "../useAnimationFrame";
 import { Tuple } from "../utilities/Math";
 import Clouds from "./Clouds";
+import { loopState } from "./LoopState";
 
 const Scene = function () {
-  const [currentSeason, setCurrentSeasonName] = useState<string>(
-    SeasonHelper.getCurrentSeason(1).name
-  );
-
-  const [snowState, setSnowState] = useState<ANIMATION_STATE>(
-    ANIMATION_STATE.FORWARD
-  );
+  const currentSeason = useRecoilValue(currentSeasonState);
+  const seasons: SeasonState[] = useRecoilValue<SeasonState[]>(seasonState);
+  const setCurrentSeason = useSetRecoilState(currentSeasonState);
+  const loopTick = useRecoilValue(loopState);
+  const setLoop = useSetRecoilState(loopState);
+  // const snowState = useRecoilValue(getSnowAnimationState);
 
   const [canvasDimensions, setCanvasDimension] = useState({
     x: window.document.documentElement.clientWidth,
     y: 500,
   });
 
-  const totalDuration = useRecoilValue(totalSeasonDuration);
+  const totalDuration = useRecoilValue(totalYearDuration);
 
-  const moutainRanges: Array<MountainRangeState> =
+  const mountainRanges: Array<MountainRangeState> =
     useRecoilValue(mountainRangeState);
 
   useEffect(() => {
@@ -48,17 +53,27 @@ const Scene = function () {
     (2 * canvasDimensions.y) / 5,
   ];
 
-  useAnimationFrame(
-    (time) => {
-      const newSeason = SeasonHelper.getCurrentSeason(time % totalDuration);
-      if (newSeason.name !== currentSeason) {
-        console.log(newSeason.name, currentSeason, totalDuration);
-        setCurrentSeasonName(newSeason.name);
-        setSnowState(newSeason.features.mountains.snowState);
+  useAnimationFrame((time) => {
+    setLoop(time);
+  }, []);
+
+  useEffect(() => {
+    let cumulativeTime = 0;
+    const newSeason = seasons.find((season): SeasonState | undefined => {
+      cumulativeTime += season.duration;
+      if (loopTick % totalDuration < cumulativeTime) {
+        return season;
       }
-    },
-    [currentSeason, snowState, moutainRanges]
-  );
+    }, 0);
+
+    if (!newSeason) {
+      throw new Error("No season found. This is unacceptable");
+    }
+
+    if (newSeason.name !== currentSeason) {
+      setCurrentSeason(() => newSeason.name);
+    }
+  }, [loopTick, currentSeason, mountainRanges, totalDuration, seasons]);
 
   return (
     <div className=" bg-blue-100">
@@ -70,8 +85,9 @@ const Scene = function () {
       >
         <Clouds canvasDimensions={canvasDimensions} />
 
-        {moutainRanges.map((range: MountainRangeState, i) => {
+        {mountainRanges.map((range: MountainRangeState, i) => {
           const ccFactor = Math.max(0, range.mountainCount - i - 1);
+          //{ snowState, i, currentSeason });
           return (
             <MountainRange
               key={`mountain_range_${i}`}
@@ -84,10 +100,6 @@ const Scene = function () {
                 ["hsl.s", `/${ccFactor + 1}`],
                 ["hsl.l", `*1.${ccFactor}`],
               ]}
-              snowAnimationState={
-                range.animation ? snowState : ANIMATION_STATE.NONE
-              }
-              currentSeason={currentSeason}
             />
           );
         })}

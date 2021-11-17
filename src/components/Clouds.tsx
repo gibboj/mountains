@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { useAnimationFrame } from "../useAnimationFrame";
+import { useRecoilValue } from "recoil";
+
 import { Tuple } from "../utilities/Math";
 import { SvgPath } from "../utilities/SvgPath";
+import { loopState } from "./LoopState";
 
 type CloudProps = {
   canvasDimensions: { x: number; y: number };
@@ -15,10 +17,11 @@ type CloudPoints = {
 const Clouds = ({ canvasDimensions }: CloudProps) => {
   const [cloudData] = useState<CloudPoints[]>(() => generateCloudPoints());
   const [cloudPaths, setCloudPaths] = useState<string[]>([]);
+  const loopTick = useRecoilValue(loopState);
 
-  useAnimationFrame((time) => {
-    setCloudPaths(generateClouds(time));
-  }, []);
+  useEffect(() => {
+    setCloudPaths(generateClouds(loopTick));
+  }, [loopTick]);
 
   const generateClouds = (time: number) => {
     const clouds = cloudData.map((cloud: CloudPoints) => {

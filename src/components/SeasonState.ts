@@ -5,38 +5,33 @@ export type SeasonState = {
   name: string;
 };
 
-export const totalSeasonDuration = selector({
-  key: "totalSeasonDuration",
+export const totalYearDuration = selector({
+  key: "totalYearDuration",
   get: ({ get }: { get: GetRecoilValue }) => {
     const seasons = get(seasonState);
     return seasons.reduce((acc: number, s: SeasonState) => {
       acc += s.duration;
-      console.log(acc, s.duration, s.name);
       return acc;
     }, 0);
   },
 });
 
-export const currentSeason = atom({
-  key: "currentSeason",
-  default: "spring",
+export const currentSeasonState = atom({
+  key: "currentSeasonState",
+  default: "winter",
 });
 
 export const getCurrentSeasonDuration = selector({
   key: "getCurrentSeasonDuration",
   get: ({ get }: { get: GetRecoilValue }) => {
-    const seasons = get(seasonState);
-    return seasons.find((s: SeasonState) => s.name === get(currentSeason))
-      .duration;
-  },
-});
-
-export const getAllSeasonDuration = selector({
-  key: "getAllSeasonDuration",
-  get: ({ get }: { get: GetRecoilValue }): number[] => {
-    const seasons = get(seasonState);
-    const durations = seasons.map((s: SeasonState) => s.duration);
-    return durations;
+    const seasons: SeasonState[] = get(seasonState);
+    const currentSeason: SeasonState | undefined = seasons.find(
+      (s: SeasonState) => s.name === get(currentSeasonState)
+    );
+    if (!currentSeason) {
+      throw new Error("Season: current season does not exist in seasons");
+    }
+    return currentSeason.duration;
   },
 });
 

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import Mountain from "./Mountain";
-
-import { ANIMATION_STATE } from "../../constants/seasons";
 import { Tuple } from "../../utilities/Math";
 import { MountainRangeState, mountainRangeState } from "./MountainState";
 import usePrevious from "../../utilities/usePrevious";
@@ -14,8 +12,6 @@ type MountainRangeOptions = {
   colorCorrection: Array<[string, string]>;
   peakRange: Tuple;
   numberOfMountains: number;
-  currentSeason: string;
-  snowAnimationState?: ANIMATION_STATE;
 };
 
 const MountainRange: React.FC<MountainRangeOptions> = function ({
@@ -25,8 +21,6 @@ const MountainRange: React.FC<MountainRangeOptions> = function ({
   colorCorrection,
   numberOfMountains,
   peakRange,
-  currentSeason,
-  snowAnimationState: snowAnimation,
 }) {
   const [xStep, setXStep] = useState(() => {
     return window.document.documentElement.clientWidth / numberOfMountains;
@@ -97,8 +91,7 @@ const MountainRange: React.FC<MountainRangeOptions> = function ({
             peakRange={peakRange}
             xStep={xStep}
             colorCorrection={colorCorrection}
-            snowAnimation={snowAnimation}
-            currentSeason={currentSeason}
+            //      currentSeason={currentSeason}
           />
         );
       })}

@@ -4,7 +4,6 @@
 
 - [ ] Fix Lake Colors
 - [ ] Preload snow animation to prevent "chug" in animation
-- [ ] Fix Everything about the drawer UI
 
 ## Additions
 
@@ -25,6 +24,7 @@
 
 ## Done
 
+- [x] Fix Everything about the drawer UI
 - [x] Add Control Panel
 - [x] Upload to website
 - [x] Fix page size addition

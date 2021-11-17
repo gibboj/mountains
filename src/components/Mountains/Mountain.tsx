@@ -2,23 +2,31 @@ import React, { useEffect, useState } from "react";
 import chroma from "chroma-js";
 import { SNOW_COLOR_RANGE } from "../../constants/colors";
 import { ANIMATION_STATE, SeasonHelper } from "../../constants/seasons";
-import { useAnimationFrame } from "../../useAnimationFrame";
+
 import { getColorInRange } from "../../utilities/Color";
 import { getRandomFromRange, Tuple } from "../../utilities/Math";
 import { SvgPath } from "../../utilities/SvgPath";
 import { MorphingAnimation } from "../MorphingAnimation";
 import generateSnow from "./SnowGenerator";
 import { useRecoilValue } from "recoil";
-import { totalSeasonDuration } from "../SeasonState";
+import {
+  seasonState,
+  getCurrentSeasonDuration,
+  totalYearDuration,
+  SeasonState,
+  currentSeasonState,
+} from "../SeasonState";
+import { getSnowAnimationState } from "../SnowState";
+import { loopState } from "../LoopState";
 
 type MountainOptions = {
   index: number;
   baseLine: number;
   peakRange: Tuple;
   xStep: number;
-  snowAnimation?: ANIMATION_STATE;
+
   colorCorrection: Array<[string, string]>;
-  currentSeason: string;
+  currentSeason?: string;
 };
 
 const ANIMATION_KEYS = [20, 50, 80, 100];
@@ -29,10 +37,11 @@ const Mountain: React.FC<MountainOptions> = function ({
   baseLine, // Base of the mountain y coordinate
   peakRange, // Range where peak of mountain should fall
   xStep, // Standard spacing for mountain
-  snowAnimation: snowAnimationState,
   colorCorrection,
-  currentSeason,
+  //currentSeason,
 }) {
+  const snowState = useRecoilValue(getSnowAnimationState);
+
   const baseX = getRandomFromRange(WIDTH_VARIATION_RANGE) * xStep;
   const baseY = baseLine;
   const peakY = getRandomFromRange(peakRange);
@@ -40,16 +49,19 @@ const Mountain: React.FC<MountainOptions> = function ({
 
   const baseLeft = peakX - baseX;
   const baseRight = peakX + baseX;
-  const totalDuration = useRecoilValue(totalSeasonDuration);
+  const totalDuration = useRecoilValue(totalYearDuration);
+  const seasonDuration = useRecoilValue(getCurrentSeasonDuration);
+  const seasons = useRecoilValue(seasonState);
+
   const [mountainPath, setMountainPath] = useState("");
   const [mountainShadowPath, setMountainShadowPath] = useState("");
   const [colorRange] = useState(() =>
-    SeasonHelper.getMountainColors(colorCorrection)
+    SeasonHelper.getMountainColors(colorCorrection, seasons, totalDuration)
   );
   const [mountainColor, setMountainColor] = useState(
     getColorInRange({ range: colorRange.colors, domain: colorRange.position })
   );
-
+  const loopTick = useRecoilValue(loopState);
   const [snowPaths, setSnowPaths] = useState<Array<string>>(
     (): Array<string> =>
       ANIMATION_KEYS.map((val) =>
@@ -60,7 +72,7 @@ const Mountain: React.FC<MountainOptions> = function ({
         )
       )
   );
-
+  const currentSeason = useRecoilValue(currentSeasonState);
   const [snowPath, setSnowPath] = React.useState("");
   const [snowColor] = React.useState(
     getColorInRange({ range: SNOW_COLOR_RANGE })
@@ -69,18 +81,7 @@ const Mountain: React.FC<MountainOptions> = function ({
     null
   );
 
-  const setupAnimationForSeason = () => {
-    if (snowPaths.length === 0) {
-      return;
-    }
-
-    const keyFrames = getKeyFrames(snowPaths);
-    const anim = getAnimation(keyFrames);
-    setAnimation(anim);
-  };
-
   function getKeyFrames(snowPaths: string[]): number[] {
-    const seasonDuration = SeasonHelper.getSeasonDurationByName(currentSeason);
     return snowPaths.reduce((acc, _, index) => {
       if (index > 0) {
         acc.push(index * (seasonDuration / (snowPaths.length - 1)));
@@ -90,7 +91,7 @@ const Mountain: React.FC<MountainOptions> = function ({
   }
 
   const getAnimation = (keyFrames: number[]): MorphingAnimation | null => {
-    switch (snowAnimationState) {
+    switch (snowState) {
       case ANIMATION_STATE.BACKWARD: {
         return new MorphingAnimation(snowPaths, keyFrames);
       }
@@ -131,26 +132,56 @@ const Mountain: React.FC<MountainOptions> = function ({
   }, [xStep]);
 
   useEffect(() => {
-    setupAnimationForSeason();
-  }, [currentSeason, snowPaths, snowAnimationState]);
+    if (snowPaths.length === 0) {
+      return;
+    }
 
-  useAnimationFrame(
-    (time) => {
-      const t = SeasonHelper.getTimeInSeason(time);
-      const path = animation ? animation.getPath(t) : "";
-      const duration = totalDuration;
-      setMountainColor(
-        getColorInRange({
-          range: colorRange.colors,
-          domain: colorRange.position,
-          percentage: (time % duration) / duration,
-        })
-      );
+    const keyFrames = getKeyFrames(snowPaths);
+    const anim = getAnimation(keyFrames);
+    setAnimation(anim);
+  }, [snowState, xStep, snowPaths, totalDuration, currentSeason]);
 
-      setSnowPath(path);
-    },
-    [animation, totalDuration, currentSeason, snowAnimationState, xStep]
-  );
+  function getTimeInSeason() {
+    let timeInSeasonsPast = 0;
+
+    const timeInYear = loopTick % totalDuration;
+    let currentSeasonDuration = 0;
+    seasons.some((s: SeasonState) => {
+      if (s.name === currentSeason) {
+        currentSeasonDuration = s.duration;
+        return true;
+      }
+      timeInSeasonsPast += s.duration;
+    });
+
+    return Math.min(timeInYear - timeInSeasonsPast, currentSeasonDuration);
+  }
+
+  useEffect(() => {
+    const timeInSeason = getTimeInSeason();
+
+    const path = animation ? animation.getPath(timeInSeason) : "";
+    const duration = totalDuration;
+    setMountainColor(
+      getColorInRange({
+        range: colorRange.colors,
+        domain: colorRange.position,
+        percentage: (loopTick % duration) / duration,
+      })
+    );
+
+    setSnowPath(path);
+  }, [
+    loopTick,
+    animation,
+    currentSeason,
+    snowState,
+    snowPath,
+    snowPaths,
+    seasons,
+    xStep,
+    totalDuration,
+  ]);
 
   return (
     <g key={`mountain_${index}`}>

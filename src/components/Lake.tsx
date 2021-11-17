@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SeasonHelper } from "../constants/seasons";
-import { useAnimationFrame } from "../useAnimationFrame";
+
 import { getColorInRange } from "../utilities/Color";
 import { useRecoilValue } from "recoil";
 import chroma from "chroma-js";
-import { totalSeasonDuration } from "./SeasonState";
+import { seasonState, totalYearDuration } from "./SeasonState";
 import { SvgPath } from "../utilities/SvgPath";
+import { loopState } from "./LoopState";
 
 type LakeProps = {
   canvasDimensions: { x: number; y: number };
@@ -18,46 +19,48 @@ const Lake: React.FC<LakeProps> = function ({
   surface,
   currentSeason,
 }: LakeProps) {
-  const [lakeColors] = useState(SeasonHelper.getLakeColors());
+  const seasons = useRecoilValue(seasonState);
+  const totalDuration = useRecoilValue(totalYearDuration);
+  const [lakeColors] = useState(
+    SeasonHelper.getLakeColors(totalDuration, seasons)
+  );
+  const loopTick = useRecoilValue(loopState);
   const [lakeColorTop, setLakeColorTop] = useState<string>("");
   const [lakeColorBottom, setLakeColorBottom] = useState<string>("");
   const [waveHeight, setWaveHeight] = useState<number[]>([1, 2, 3]);
   const [waves] = useState<number[][]>(() =>
     generateWaves(surface, canvasDimensions)
   );
-  const totalDuration = useRecoilValue(totalSeasonDuration);
+
   const getPointOnSin = (time: number) => {
     return Math.sin((time % 31416) / 1000) * 5 - 5;
   };
 
-  useAnimationFrame(
-    (time) => {
-      const percentage = (time % totalDuration) / totalDuration;
+  useEffect(() => {
+    const percentage = (loopTick % totalDuration) / totalDuration;
 
-      setLakeColorTop(
-        getColorInRange({
-          range: lakeColors.top,
-          domain: lakeColors.position,
-          percentage,
-        })
-      );
+    setLakeColorTop(
+      getColorInRange({
+        range: lakeColors.top,
+        domain: lakeColors.position,
+        percentage,
+      })
+    );
 
-      setLakeColorBottom(
-        getColorInRange({
-          range: lakeColors.bottom,
-          domain: lakeColors.position,
-          percentage,
-        })
-      );
-      setWaveHeight([
-        getPointOnSin(time),
-        getPointOnSin(time + 2500),
-        getPointOnSin(time + 10000),
-        getPointOnSin(time + 7000),
-      ]);
-    },
-    [currentSeason]
-  );
+    setLakeColorBottom(
+      getColorInRange({
+        range: lakeColors.bottom,
+        domain: lakeColors.position,
+        percentage,
+      })
+    );
+    setWaveHeight([
+      getPointOnSin(loopTick),
+      getPointOnSin(loopTick + 2500),
+      getPointOnSin(loopTick + 10000),
+      getPointOnSin(loopTick + 7000),
+    ]);
+  }, [currentSeason, loopTick]);
 
   let waveColor = lakeColorTop;
   if (lakeColorTop) {

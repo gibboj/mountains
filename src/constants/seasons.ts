@@ -6,11 +6,7 @@ import {
   SUMMER_MOUNTAIN_COLORS,
   WINTER_MOUNTAIN_COLORS,
 } from "./colors";
-
-export const WINTER_LENGTH = 12000;
-export const SPRING_LENGTH = 12000;
-export const SUMMER_LENGTH = 12000;
-export const FALL_LENGTH = 12000;
+import { SeasonState } from "../components/SeasonState";
 
 export type Seasons = "winter" | "spring" | "summer" | "fall";
 
@@ -22,130 +18,62 @@ export enum ANIMATION_STATE {
   NONE,
 }
 
-export interface Season {
+export interface SeasonColors {
   name: Seasons;
-  duration: number;
-  features: {
-    mountains: {
-      snowState: ANIMATION_STATE;
-      colorRange: Array<string>;
-    };
-    lake: {
-      colorRange: Array<string>;
-    };
+  mountains: {
+    colorRange: Array<string>;
+  };
+  lake: {
+    colorRange: Array<string>;
   };
 }
 
-export const seasons: Array<Season> = [
+export const seasonColors: Array<SeasonColors> = [
   {
     name: "winter",
-    duration: WINTER_LENGTH,
-    features: {
-      mountains: {
-        snowState: ANIMATION_STATE.FORWARD,
-        colorRange: WINTER_MOUNTAIN_COLORS,
-      },
-      lake: {
-        colorRange: ["e1f2f5", "c1dce0"],
-      },
+    mountains: {
+      colorRange: WINTER_MOUNTAIN_COLORS,
+    },
+    lake: {
+      colorRange: ["e1f2f5", "c1dce0"],
     },
   },
   {
     name: "spring",
-    duration: SPRING_LENGTH,
-    features: {
-      mountains: {
-        snowState: ANIMATION_STATE.BACKWARD,
-        colorRange: SPRING_MOUNTAIN_COLORS,
-      },
-      lake: {
-        colorRange: ["78ADC5", "4D8575"],
-      },
+
+    mountains: {
+      colorRange: SPRING_MOUNTAIN_COLORS,
+    },
+    lake: {
+      colorRange: ["78ADC5", "4D8575"],
     },
   },
   {
     name: "summer",
-    duration: SUMMER_LENGTH,
-    features: {
-      mountains: {
-        snowState: ANIMATION_STATE.NONE,
-        colorRange: SUMMER_MOUNTAIN_COLORS,
-      },
-      lake: {
-        colorRange: ["53ADDC", "214F99"],
-      },
+    mountains: {
+      colorRange: SUMMER_MOUNTAIN_COLORS,
+    },
+    lake: {
+      colorRange: ["53ADDC", "214F99"],
     },
   },
   {
     name: "fall",
-    duration: FALL_LENGTH,
-    features: {
-      mountains: {
-        snowState: ANIMATION_STATE.NONE,
-        colorRange: FALL_MOUNTAIN_COLORS,
-      },
-      lake: {
-        colorRange: ["91ACC3", "385275"],
-      },
+    mountains: {
+      colorRange: FALL_MOUNTAIN_COLORS,
+    },
+    lake: {
+      colorRange: ["91ACC3", "385275"],
     },
   },
 ];
 
 export class SeasonHelper {
-  static getTotalDuration(): number {
-    return seasons.reduce((acc: number, season: Season): number => {
-      return acc + season.duration;
-    }, 0);
-  }
-
-  static getSeasonDuration(time: number) {
-    return this.getCurrentSeason(time).duration;
-  }
-
-  static getSeasonDurationByName(name: string) {
-    const season = seasons.find((s) => {
-      return s.name === name;
-    });
-    if (!season) {
-      throw new Error("cant find season");
-    }
-    return season?.duration;
-  }
-
-  static getTimeInSeason(time: number) {
-    let cumulativeTime = 0;
-    const total = this.getTotalDuration();
-    const excessTime = time % total;
-
-    seasons.some((season) => {
-      if (excessTime < cumulativeTime + season.duration) {
-        return true;
-      }
-      cumulativeTime += season.duration;
-    });
-
-    return excessTime - cumulativeTime;
-  }
-
-  static getCurrentSeason(time: number): Season {
-    let cumulativeTime = 0;
-    const total = this.getTotalDuration();
-
-    const currentSeason = seasons.find((season): Season | undefined => {
-      cumulativeTime += season.duration;
-      if (time % total < cumulativeTime) {
-        return season;
-      }
-    }, 0);
-
-    if (!currentSeason) {
-      throw new Error("No season found. This is unacceptable");
-    }
-
-    return currentSeason;
-  }
-
-  static getMountainColors(colorCorrection: Array<[string, string]>): {
+  static getMountainColors(
+    colorCorrection: Array<[string, string]>,
+    seasons: SeasonState[],
+    totalDuration: number
+  ): {
     colors: Array<string>;
     position: Array<number>;
   } {
@@ -154,23 +82,36 @@ export class SeasonHelper {
     let timeProportion = 0;
 
     for (let s = 0; s < seasons.length; s++) {
+      const seasonName = seasons[s].name;
       timeProportion += seasons[s].duration;
+
+      const sColor = this.getSeasonColorBySeason(seasonName);
       let c = getColorInRange({
-        range: seasons[s].features.mountains.colorRange,
+        range: sColor.mountains.colorRange,
       });
       colorCorrection.map(([modeChannel, adjustment]) => {
         c = chroma(c).set(modeChannel, adjustment).hex();
       });
       colors.push(c);
 
-      position.push(timeProportion / SeasonHelper.getTotalDuration());
+      position.push(timeProportion / totalDuration);
     }
     colors.unshift(colors[colors.length - 1]);
 
     return { colors, position };
   }
+  static getSeasonColorBySeason(seasonName: string): SeasonColors {
+    const sColor = seasonColors.find((s) => s.name === seasonName);
+    if (!sColor) {
+      throw new Error(`Mountain color not set for season: ${seasonName}`);
+    }
+    return sColor;
+  }
 
-  static getLakeColors(): {
+  static getLakeColors(
+    totalDuration: number,
+    seasons: SeasonState[]
+  ): {
     top: Array<string>;
     bottom: Array<string>;
     position: Array<number>;
@@ -181,31 +122,15 @@ export class SeasonHelper {
     let timeProportion = 0;
 
     for (let s = 0; s < seasons.length; s++) {
+      const sColors = this.getSeasonColorBySeason(seasons[s].name);
       timeProportion += seasons[s].duration;
-      colorsTop.push(seasons[s].features.lake.colorRange[0]);
-      colorsBottom.push(seasons[s].features.lake.colorRange[1]);
-      position.push(timeProportion / SeasonHelper.getTotalDuration());
+      colorsTop.push(sColors.lake.colorRange[0]);
+      colorsBottom.push(sColors.lake.colorRange[1]);
+      position.push(timeProportion / totalDuration);
     }
 
     colorsTop.unshift(colorsTop[colorsTop.length - 1]);
     colorsBottom.unshift(colorsBottom[colorsBottom.length - 1]);
     return { top: colorsTop, bottom: colorsBottom, position };
-  }
-
-  static getCurrentSeasonName(time: number): string {
-    const season = this.getCurrentSeason(time);
-    return season.name;
-  }
-
-  static getNextSeason(time: number): Season {
-    const season = this.getCurrentSeason(time);
-    return this.getCurrentSeason(time + season.duration);
-  }
-
-  static getPreviousSeason(time: number): Season {
-    const prevTime = time - this.getTimeInSeason(time) - 1;
-    return this.getCurrentSeason(
-      prevTime < 0 ? prevTime + this.getTotalDuration() : prevTime
-    );
   }
 }

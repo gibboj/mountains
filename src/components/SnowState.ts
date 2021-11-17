@@ -2,11 +2,11 @@ import { atom, selector, GetRecoilValue } from "recoil";
 import { ANIMATION_STATE } from "../constants/seasons";
 import { currentSeasonState } from "./SeasonState";
 
-type Validator = (...args: any[]) => boolean;
+type Validator = (get: GetRecoilValue, ...args: unknown[]) => boolean;
 
 const validators: Record<string, Validator> = {
-  season: (get: GetRecoilValue, season: string) => {
-    return get(currentSeasonState) === season;
+  season: (get: GetRecoilValue, season: unknown) => {
+    return get(currentSeasonState) === (season as string);
   },
 };
 
@@ -55,7 +55,7 @@ export const getSnowAnimationState = selector({
       return (
         req &&
         req.reduce((acc: boolean, r: ValidationObj): boolean => {
-          const isValid = r.validator(get, r.params);
+          const isValid = r.validator(get, ...r.params);
           return acc && isValid;
         }, true)
       );
@@ -65,6 +65,6 @@ export const getSnowAnimationState = selector({
       throw new Error("no valid default provided for snow animation");
     }
 
-    return snowAnimation.result;
+    return snowAnimation.result as number;
   },
 });

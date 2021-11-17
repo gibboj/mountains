@@ -18,6 +18,7 @@ import {
 } from "../SeasonState";
 import { getSnowAnimationState } from "../SnowState";
 import { loopState } from "../LoopState";
+import { mountainRangeState } from "./MountainState";
 
 type MountainOptions = {
   index: number;
@@ -27,6 +28,7 @@ type MountainOptions = {
 
   colorCorrection: Array<[string, string]>;
   currentSeason?: string;
+  range: number;
 };
 
 const ANIMATION_KEYS = [20, 50, 80, 100];
@@ -38,10 +40,14 @@ const Mountain: React.FC<MountainOptions> = function ({
   peakRange, // Range where peak of mountain should fall
   xStep, // Standard spacing for mountain
   colorCorrection,
-  //currentSeason,
+  range,
 }) {
-  const snowState = useRecoilValue(getSnowAnimationState);
+  const seasonSnowState: number = useRecoilValue(getSnowAnimationState);
+  const mountainRange = useRecoilValue(mountainRangeState);
 
+  const [snowState] = React.useState<number>(() =>
+    mountainRange[range]?.animation ? seasonSnowState : ANIMATION_STATE.NONE
+  );
   const baseX = getRandomFromRange(WIDTH_VARIATION_RANGE) * xStep;
   const baseY = baseLine;
   const peakY = getRandomFromRange(peakRange);
@@ -51,6 +57,7 @@ const Mountain: React.FC<MountainOptions> = function ({
   const baseRight = peakX + baseX;
   const totalDuration = useRecoilValue(totalYearDuration);
   const seasonDuration = useRecoilValue(getCurrentSeasonDuration);
+
   const seasons = useRecoilValue(seasonState);
 
   const [mountainPath, setMountainPath] = useState("");

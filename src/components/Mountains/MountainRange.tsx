@@ -91,7 +91,7 @@ const MountainRange: React.FC<MountainRangeOptions> = function ({
             peakRange={peakRange}
             xStep={xStep}
             colorCorrection={colorCorrection}
-            //      currentSeason={currentSeason}
+            range={index}
           />
         );
       })}

@@ -27,11 +27,12 @@ interface getRandomFromRange {
 
 export function getRandomFromRange(a: number | Tuple, b?: number) {
   const x: number = b === undefined ? (a as Tuple)[0] : (a as number);
-  const y: number = b === undefined ? (a as Tuple)[1] : (a as number);
+  const y: number = b === undefined ? (a as Tuple)[1] : (b as number);
 
   if (a === b) {
     return a;
   }
+
   const lower = x < y ? x : y;
   const upper = y < x ? x : y;
   return lower + Math.random() * (upper - lower);

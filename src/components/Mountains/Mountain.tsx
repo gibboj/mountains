@@ -45,7 +45,7 @@ const Mountain: React.FC<MountainOptions> = function ({
   const seasonSnowState: number = useRecoilValue(getSnowAnimationState);
   const mountainRange = useRecoilValue(mountainRangeState);
 
-  const [snowState] = React.useState<number>(() =>
+  const [snowState, setSnowState] = React.useState<number>(
     mountainRange[range]?.animation ? seasonSnowState : ANIMATION_STATE.NONE
   );
   const baseX = getRandomFromRange(WIDTH_VARIATION_RANGE) * xStep;
@@ -137,6 +137,13 @@ const Mountain: React.FC<MountainOptions> = function ({
       )
     );
   }, [xStep]);
+
+  useEffect(() => {
+    const snowState = mountainRange[range]?.animation
+      ? seasonSnowState
+      : ANIMATION_STATE.NONE;
+    setSnowState(snowState);
+  }, [range, seasonSnowState]);
 
   useEffect(() => {
     if (snowPaths.length === 0) {

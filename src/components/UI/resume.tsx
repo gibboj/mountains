@@ -1,4 +1,6 @@
 import { DateTime, DateTimeFormatOptions } from "luxon";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import Button from "@mui/material/Button";
 import React from "react";
 
 type Position = {
@@ -86,6 +88,7 @@ const jobs = [
     ],
   },
 ];
+
 const Resume = () => {
   const jobElements = jobs.map((job, index) => (
     <Job key={`${job.company}_${index}`} {...job} />
@@ -93,6 +96,15 @@ const Resume = () => {
 
   return (
     <div className="px-28">
+      <div className="flex mb-8">
+        <Button variant="contained" startIcon={<FileDownloadIcon />}>
+          PDF Download
+        </Button>
+      </div>
+      {/* <Button download href="./Kendra_Gibbons_resume_2021.pdf">
+        Download
+        <FileDownloadIcon />
+      </Button> */}
       <h1>Experience</h1>
       {jobElements}
 

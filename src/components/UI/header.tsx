@@ -12,7 +12,7 @@ const Header = function () {
 
       <Link
         className="rounded-b-md px-3 py-2 mr-4  ml-2 bg-white text-gray-700 font-medium"
-        to="/Resume"
+        to="/resume"
       >
         Resume
       </Link>

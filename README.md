@@ -1,29 +1,25 @@
 # vite-project
 
 ## Bugs
-
 - [ ] Fix Lake Colors
+- [ ] Fix Lake Resize waves
 - [ ] Preload snow animation to prevent "chug" in animation
 
 ## Additions
-
 - [ ] Add / remove clouds
-- [ ] Add PDF download of resume
 - [ ] Add github link to site & make public repo
 - [ ] Make season modifiable
 
 ## Subtractions
 
-- [ ] Add Seasons object to state
-
 ## Ideas
-
 - [ ] Tiny climber person
 - [ ] Fishes
 - [ ] Sun
 
 ## Done
-
+- [x] Add Seasons object to state
+- [x] Add PDF download of resume
 - [x] Fix Everything about the drawer UI
 - [x] Add Control Panel
 - [x] Upload to website

@@ -21,21 +21,27 @@ import { loopState } from "./LoopState";
 
 const Scene = function () {
   const currentSeason = useRecoilValue(currentSeasonState);
-  const seasons: SeasonState[] = useRecoilValue<SeasonState[]>(seasonState);
   const setCurrentSeason = useSetRecoilState(currentSeasonState);
-  const loopTick = useRecoilValue(loopState);
-  const setLoop = useSetRecoilState(loopState);
-  // const snowState = useRecoilValue(getSnowAnimationState);
+
+  const seasons: SeasonState[] = useRecoilValue<SeasonState[]>(seasonState);
+  const loopTime = useRecoilValue(loopState);
+  const setLoopTime = useSetRecoilState(loopState);
+
+  const totalDuration = useRecoilValue(totalYearDuration);
+
+  const mountainRanges: Array<MountainRangeState> =
+    useRecoilValue(mountainRangeState);
 
   const [canvasDimensions, setCanvasDimension] = useState({
     x: window.document.documentElement.clientWidth,
     y: 500,
   });
 
-  const totalDuration = useRecoilValue(totalYearDuration);
-
-  const mountainRanges: Array<MountainRangeState> =
-    useRecoilValue(mountainRangeState);
+  const mountainBase = 5 * (canvasDimensions.y / 6);
+  const peakRange: Tuple = [
+    canvasDimensions.y / 2,
+    (2 * canvasDimensions.y) / 5,
+  ];
 
   useEffect(() => {
     const handleResize = () => {
@@ -47,21 +53,15 @@ const Scene = function () {
     window.addEventListener("resize", handleResize);
   }, []);
 
-  const mountainBase = 5 * (canvasDimensions.y / 6);
-  const peakRange: Tuple = [
-    canvasDimensions.y / 2,
-    (2 * canvasDimensions.y) / 5,
-  ];
-
   useAnimationFrame((time) => {
-    setLoop(time);
+    setLoopTime(time);
   }, []);
 
   useEffect(() => {
     let cumulativeTime = 0;
     const newSeason = seasons.find((season): SeasonState | undefined => {
       cumulativeTime += season.duration;
-      if (loopTick % totalDuration < cumulativeTime) {
+      if (loopTime % totalDuration < cumulativeTime) {
         return season;
       }
     }, 0);
@@ -73,7 +73,7 @@ const Scene = function () {
     if (newSeason.name !== currentSeason) {
       setCurrentSeason(() => newSeason.name);
     }
-  }, [loopTick, currentSeason, mountainRanges, totalDuration, seasons]);
+  }, [loopTime, currentSeason, mountainRanges, totalDuration, seasons]);
 
   return (
     <div className=" bg-blue-100">

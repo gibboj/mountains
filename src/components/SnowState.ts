@@ -21,7 +21,6 @@ type SnowAnimation = {
   priority: number;
 };
 
-//type ValidationObj = { params: Type; validator: ValidationFn };
 export const snowSeasonAnimation = atom({
   key: "snowSeasonAnimation",
   default: [
